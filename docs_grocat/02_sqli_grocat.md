@@ -38,3 +38,5 @@ Se prohíbe terminantemente la construcción de consultas SQL mediante la concat
 ### Control de Mitigación (Defensa en Profundidad)
 1. **Validación de Entradas:** Implementar una lista blanca estricta en el backend que valide que el parámetro `id` sea exclusivamente numérico (ej. usando expresiones regulares o forzando un casteo de tipo `int`).
 2. **Principio de Menor Privilegio:** Configurar el usuario de la base de datos con el que se conecta la aplicación web para que solo tenga permisos de lectura estrictamente necesarios (`SELECT`), revocando capacidades de modificación o acceso a tablas administrativas del sistema.
+
+

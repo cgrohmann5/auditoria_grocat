@@ -1,184 +1,464 @@
-.counter {
-  font-size: 16px;
-  padding: 5px 10px;
-  border-radius: 5px;
-  color: var(--accent);
-  background: var(--accent-bg);
-  border: 2px solid transparent;
-  transition: border-color 0.3s;
-  margin-bottom: 24px;
+/* ==========================================================================
+   DISEÑO INDUSTRIAL CLARO - INSPIRADO EN CALL OF DUTY / ACTIVISION 
+   FORZADO DE PANTALLA COMPLETA TOTAL, RESPONSIVO Y TIPOGRAFÍAS DE ALTO CONTRASTE
+   ========================================================================== */
 
-  &:hover {
-    border-color: var(--accent-border);
-  }
-  &:focus-visible {
-    outline: 2px solid var(--accent);
-    outline-offset: 2px;
-  }
+:root {
+  --cod-bg-main: #f2f4f7;        /* Gris cemento claro industrial */
+  --cod-bg-panel: #ffffff;       /* Blanco puro para contraste limpio */
+  --cod-bg-dark: #1e2229;        /* Gris militar oscuro para headers y textos fuertes */
+  --cod-orange: #ff5500;         /* Naranja brillante característico de CoD */
+  --cod-orange-glow: rgba(255, 85, 0, 0.2);
+  --cod-border: #d1d5db;         /* Borde gris estructurado */
+  
+  /* Escala de criticidad */
+  --cod-critico: #e11d48;        /* Rojo advertencia */
+  --cod-alto: #f59e0b;           /* Naranja medio */
+  --cod-safe: #10b981;           /* Verde de estado óptimo */
 }
 
-.hero {
-  position: relative;
-
-  .base,
-  .framework,
-  .vite {
-    inset-inline: 0;
-    margin: 0 auto;
-  }
-
-  .base {
-    width: 170px;
-    position: relative;
-    z-index: 0;
-  }
-
-  .framework,
-  .vite {
-    position: absolute;
-  }
-
-  .framework {
-    z-index: 1;
-    top: 34px;
-    height: 28px;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(44deg) rotateY(39deg)
-      scale(1.4);
-  }
-
-  .vite {
-    z-index: 0;
-    top: 107px;
-    height: 26px;
-    width: auto;
-    transform: perspective(2000px) rotateZ(300deg) rotateX(40deg) rotateY(39deg)
-      scale(0.8);
-  }
+/* 1. ROMPER MÁRGENES DEL SISTEMA PARA OCUPAR EL 100% DE LA PANTALLA */
+html, 
+body, 
+#root {
+  margin: 0 !important;
+  padding: 0 !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  min-height: 100vh;
+  background-color: var(--cod-bg-main);
+  box-sizing: border-box;
 }
 
-#center {
+* {
+  box-sizing: border-box;
+}
+
+/* Contenedor Completo del Tablero */
+.cod-dashboard {
   display: flex;
   flex-direction: column;
-  gap: 25px;
-  place-content: center;
-  place-items: center;
-  flex-grow: 1;
-
-  @media (max-width: 1024px) {
-    padding: 32px 20px 24px;
-    gap: 18px;
-  }
+  min-height: 100vh;
+  width: 100% !important;
+  max-width: 100% !important;
+  margin: 0 !important;
 }
 
-#next-steps {
+/* HEADER: Barra de Estado Táctica */
+.cod-header {
+  background-color: var(--cod-bg-dark);
+  color: #ffffff !important;
+  padding: 15px 30px;
   display: flex;
-  border-top: 1px solid var(--border);
-  text-align: left;
-
-  & > div {
-    flex: 1 1 0;
-    padding: 32px;
-    @media (max-width: 1024px) {
-      padding: 24px 20px;
-    }
-  }
-
-  .icon {
-    margin-bottom: 16px;
-    width: 22px;
-    height: 22px;
-  }
-
-  @media (max-width: 1024px) {
-    flex-direction: column;
-    text-align: center;
-  }
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 4px solid var(--cod-orange);
+  width: 100% !important;
 }
 
-#docs {
-  border-right: 1px solid var(--border);
-
-  @media (max-width: 1024px) {
-    border-right: none;
-    border-bottom: 1px solid var(--border);
-  }
-}
-
-#next-steps ul {
-  list-style: none;
-  padding: 0;
+.cod-logo-area {
   display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.cod-title-main {
+  font-family: 'Impact', 'Arial Black', sans-serif;
+  font-size: 1.8rem;
+  font-weight: 900;
+  letter-spacing: 2px;
+  color: #ffffff !important;
+}
+
+.cod-title-sub {
+  font-family: monospace;
+  color: #9ca3af !important;
+  font-size: 0.9rem;
+  border-left: 1px solid #4b5563;
+  padding-left: 15px;
+}
+
+.cod-system-status {
+  font-family: monospace;
+  font-size: 0.85rem;
+  display: flex;
+  align-items: center;
   gap: 8px;
-  margin: 32px 0 0;
-
-  .logo {
-    height: 18px;
-  }
-
-  a {
-    color: var(--text-h);
-    font-size: 16px;
-    border-radius: 6px;
-    background: var(--social-bg);
-    display: flex;
-    padding: 6px 12px;
-    align-items: center;
-    gap: 8px;
-    text-decoration: none;
-    transition: box-shadow 0.3s;
-
-    &:hover {
-      box-shadow: var(--shadow);
-    }
-    .button-icon {
-      height: 18px;
-      width: 18px;
-    }
-  }
-
-  @media (max-width: 1024px) {
-    margin-top: 20px;
-    flex-wrap: wrap;
-    justify-content: center;
-
-    li {
-      flex: 1 1 calc(50% - 8px);
-    }
-
-    a {
-      width: 100%;
-      justify-content: center;
-      box-sizing: border-box;
-    }
-  }
+  color: #ffffff !important;
 }
 
-#spacer {
-  height: 88px;
-  border-top: 1px solid var(--border);
-  @media (max-width: 1024px) {
-    height: 48px;
-  }
+.status-indicator.online {
+  width: 10px;
+  height: 10px;
+  background-color: var(--cod-safe);
+  border-radius: 50%;
+  display: inline-block;
+  box-shadow: 0 0 8px var(--cod-safe);
 }
 
-.ticks {
-  position: relative;
+/* LAYOUT GENERAL */
+.cod-layout {
+  display: flex;
+  flex: 1;
+  width: 100% !important;
+}
+
+/* SIDEBAR: Menú de Selección de Misiones/Archivos */
+.cod-sidebar {
+  width: 280px;
+  background-color: #e5e7eb;
+  border-right: 1px solid var(--cod-border);
+  padding: 20px 10px;
+  flex-shrink: 0;
+}
+
+.sidebar-title {
+  font-family: 'Impact', sans-serif;
+  font-size: 0.9rem;
+  letter-spacing: 1px;
+  color: #4b5563 !important;
+  padding-left: 10px;
+  margin-bottom: 15px;
+}
+
+.cod-nav {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+/* Botones Interactivos del Menú */
+.cod-nav-btn {
+  background: var(--cod-bg-panel);
+  border: 1px solid var(--cod-border);
+  color: var(--cod-bg-dark) !important;
+  padding: 14px 15px;
+  text-align: left;
+  font-family: 'Impact', sans-serif;
+  font-size: 1rem;
+  letter-spacing: 1px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  clip-path: polygon(0 0, 95% 0, 100% 30%, 100% 100%, 0 100%);
+  transition: all 0.2s ease;
   width: 100%;
+}
 
-  &::before,
-  &::after {
-    content: '';
-    position: absolute;
-    top: -4.5px;
-    border: 5px solid transparent;
+.cod-nav-btn .btn-id {
+  font-family: monospace;
+  background-color: var(--cod-bg-dark);
+  color: #fff !important;
+  padding: 2px 6px;
+  font-size: 0.8rem;
+}
+
+.cod-nav-btn:hover {
+  background-color: var(--cod-bg-dark);
+  color: #fff !important;
+  border-color: var(--cod-bg-dark);
+}
+
+.cod-nav-btn.active {
+  background-color: var(--cod-orange);
+  color: #ffffff !important;
+  border-color: var(--cod-orange);
+}
+
+.cod-nav-btn.active .btn-id {
+  background-color: #ffffff;
+  color: var(--cod-orange) !important;
+}
+
+/* ==========================================================================
+   CORRECCIÓN DE TIPOGRAFÍAS DE ALTO CONTRASTE (TÍTULOS VISIBLES)
+   ========================================================================== */
+
+.cod-content-area {
+  flex: 1;
+  padding: 40px;
+  background-color: var(--cod-bg-main);
+}
+
+/* Títulos principales de las secciones (01 // RESUMEN EJECUTIVO...) */
+h2 {
+  font-family: 'Impact', sans-serif;
+  font-size: 2.2rem;
+  letter-spacing: 1px;
+  margin-top: 0;
+  margin-bottom: 25px;
+  border-left: 6px solid var(--cod-orange);
+  padding-left: 15px;
+  color: var(--cod-bg-dark) !important; /* Forzar color oscuro */
+}
+
+/* Títulos secundarios dentro de las tarjetas (CONTEXTO OPERATIVO...) */
+h3 {
+  font-family: 'Impact', sans-serif !important;
+  font-size: 1.3rem !important;
+  letter-spacing: 0.5px !important;
+  margin-top: 0 !important;
+  margin-bottom: 15px !important;
+  color: var(--cod-bg-dark) !important;  /* Forzar color oscuro visible sobre fondo blanco */
+  border-bottom: 1px dashed var(--cod-border);
+  padding-bottom: 5px;
+}
+
+p {
+  line-height: 1.6;
+  color: #1f2937 !important; /* Texto gris carbón oscuro muy legible */
+  font-size: 1rem;
+}
+
+/* Tarjetas Informativas */
+.cod-card {
+  background-color: var(--cod-bg-panel);
+  border: 1px solid var(--cod-border);
+  padding: 30px;
+  border-radius: 2px;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+}
+
+/* Etiquetas de Alertas */
+.cod-alert-tag {
+  display: inline-block;
+  padding: 6px 12px;
+  font-family: 'Impact', sans-serif;
+  letter-spacing: 1px;
+  color: #fff !important;
+  margin-bottom: 20px;
+}
+.cod-alert-tag.high { background-color: var(--cod-critico); }
+.cod-alert-tag.medium { background-color: var(--cod-alto); }
+
+/* ==========================================================================
+   RECUADROS DE CÓDIGO TÁCTICOS (PAYLOADS DESTACADOS)
+   ========================================================================== */
+
+/* Código en línea dentro de párrafos */
+code {
+  background-color: #1e2229 !important; /* Fondo oscuro militar mate */
+  color: #00ff66 !important;            /* Letras verde neón táctico */
+  padding: 4px 8px !important;
+  border-radius: 3px !important;
+  font-family: 'Courier New', Courier, monospace !important;
+  font-size: 0.95em !important;
+  font-weight: bold !important;
+  border: 1px solid rgba(0, 255, 102, 0.3) !important;
+  display: inline-block;
+}
+
+/* Cajas de código estructuradas grandes (Consultas SQL) */
+.cod-code-box {
+  background-color: #0f1115;
+  color: #ffffff !important;
+  padding: 20px;
+  font-family: 'Courier New', Courier, monospace;
+  overflow-x: auto;
+  margin-top: 15px;
+  border-left: 4px solid var(--cod-orange);
+  border-radius: 2px;
+  box-shadow: inset 0 0 10px rgba(0,0,0,0.8);
+}
+
+.cod-code-box code {
+  background-color: transparent !important;
+  color: #10b981 !important;    /* Verde esmeralda */
+  padding: 0 !important;
+  border: none !important;
+  font-size: 0.95rem;
+}
+
+/* ==========================================================================
+   SECCIÓN INTERACTIVA: MATRIZ DE RIESGO
+   ========================================================================== */
+
+.cod-grid-container {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 40px;
+  margin-top: 25px;
+}
+
+.matrix-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  background-color: var(--cod-bg-panel);
+  padding: 20px;
+  border: 1px solid var(--cod-border);
+}
+
+.matrix-row {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+}
+
+.axis-label-y {
+  width: 25px;
+  font-weight: bold;
+  text-align: right;
+  margin-right: 10px;
+  color: var(--cod-bg-dark) !important;
+}
+.axis-label-x {
+  width: 55px;
+  text-align: center;
+  font-weight: bold;
+  color: var(--cod-bg-dark) !important;
+}
+.axis-x-row {
+  margin-top: 10px;
+}
+
+.matrix-cell {
+  width: 55px;
+  height: 55px;
+  border: 1px solid #e5e7eb;
+  cursor: pointer;
+  font-family: 'Impact', sans-serif;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.cell-normal { background-color: #f3f4f6; color: #9ca3af !important; }
+.cell-normal:hover { background-color: #d1d5db; }
+
+.cell-critica { background-color: rgba(225, 29, 72, 0.15); color: var(--cod-critico) !important; border: 2px solid var(--cod-critico); }
+.cell-alta { background-color: rgba(245, 158, 11, 0.15); color: var(--cod-alto) !important; border: 2px solid var(--cod-alto); }
+
+.selected-cell {
+  background-color: var(--cod-orange) !important;
+  color: white !important;
+  border-color: var(--cod-orange) !important;
+  transform: scale(1.05);
+  box-shadow: 0 0 10px var(--cod-orange);
+}
+
+.cod-threat-visor {
+  background-color: var(--cod-bg-panel);
+  border: 1px solid var(--cod-border);
+  border-top: 4px solid var(--cod-orange);
+  padding: 25px;
+  display: flex;
+  flex-direction: column;
+}
+
+.visor-header {
+  font-family: 'Impact', sans-serif;
+  font-size: 1.2rem;
+  letter-spacing: 1px;
+  border-bottom: 1px solid var(--cod-border);
+  padding-bottom: 10px;
+  margin-bottom: 15px;
+  color: var(--cod-bg-dark) !important;
+}
+
+.visor-row {
+  margin-bottom: 12px;
+  line-height: 1.5;
+  color: #374151 !important;
+}
+
+.highlight-orange {
+  color: var(--cod-orange) !important;
+  font-weight: bold;
+}
+
+.badge-severidad {
+  background-color: var(--cod-bg-dark);
+  color: #fff !important;
+  padding: 3px 8px;
+  font-weight: bold;
+  font-size: 0.85rem;
+}
+
+.animate-fade {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ==========================================================================
+   MEDIA QUERIES - RESPONSIVIDAD PARA DISPOSITIVOS MÓVILES
+   ========================================================================== */
+
+@media (max-width: 992px) {
+  .cod-layout {
+    flex-direction: column; 
+  }
+  
+  .cod-sidebar {
+    width: 100%;
+    border-right: none;
+    border-bottom: 1px solid var(--cod-border);
+    padding: 15px;
   }
 
-  &::before {
-    left: 0;
-    border-left-color: var(--border);
+  .cod-nav {
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 5px;
   }
-  &::after {
-    right: 0;
-    border-right-color: var(--border);
+
+  .cod-nav-btn {
+    flex: 1 1 calc(50% - 10px); 
+    padding: 10px;
+    font-size: 0.9rem;
+  }
+
+  .cod-grid-container {
+    grid-template-columns: 1fr; 
+    gap: 20px;
+  }
+
+  .cod-matrix-heat {
+    display: flex;
+    justify-content: center;
+    overflow-x: auto; 
+    padding-bottom: 10px;
+  }
+}
+
+@media (max-width: 600px) {
+  .cod-header {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+    padding: 15px;
+  }
+
+  .cod-title-sub {
+    border-left: none;
+    padding-left: 0;
+    display: block;
+    width: 100%;
+  }
+
+  .cod-nav {
+    flex-direction: column; 
+  }
+
+  .cod-nav-btn {
+    width: 100%;
+  }
+
+  .cod-content-area {
+    padding: 15px;
+  }
+
+  h2 {
+    font-size: 1.6rem;
+  }
+
+  .cod-card {
+    padding: 15px;
   }
 }
