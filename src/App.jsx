@@ -423,7 +423,7 @@ export default function Matriz() {
               
               <div className="cod-card">
                 <h3>ANÁLISIS DE DESARROLLO ASISTIDO POR IA</h3>
-                <p>La IA agilizó la redacción y maquetación de este panel táctico corporativo. Sin embargo, se identificó que las herramientas de automatización suelen generar código con consultas concatenadas vulnerables si no se les instruye explícitamente lo contrario.</p>
+                <p>En creacion..</p>
               </div>
 
               <div className="cod-card command-center-card">
