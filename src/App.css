@@ -543,6 +543,21 @@ code {
   transform: translateY(0);
 }
 
+.cod-intel-report {
+  width: 100%;             /* Se adapta al ancho de su contenedor */
+  max-width: 400px;        /* <--- AQUÍ LIMITAS EL TAMAÑO (puedes probar con 300px, 500px, etc.) */
+  display: block;
+  margin: 15px auto;       /* Esto centra la imagen automáticamente */
+  border: 1px solid var(--cod-orange);
+  padding: 5px;
+  background-color: #000;
+}
+
+
+
+
+
+
 /* ==========================================================================
    MEDIA QUERIES - RESPONSIVIDAD PARA DISPOSITIVOS MÓVILES
    ========================================================================== */

@@ -1,6 +1,12 @@
 import React, { useState } from 'react';
 import './App.css'; // Asegúrate de importar el archivo CSS
 
+// Importación de las imágenes
+import comandosImg from './img_grocat/comandos_grocat.png';
+import sqliImg from './img_grocat/sqli_grocat.png';
+import xssImg from './img_grocat/xss_grocat.png';
+
+
 export default function Matriz() {
   const [seccionActiva, setSeccionActiva] = useState('resumen');
   const [riesgoSeleccionado, setRiesgoSeleccionado] = useState(null);
@@ -105,7 +111,7 @@ export default function Matriz() {
             </div>
           )}
 
-          {/* 02 SQLI */}
+{/* 02 SQLI */}
           {seccionActiva === 'sqli' && (
             <div className="animate-fade">
               <h2>02 // REPORTES TÉCNICOS: INYECCIÓN SQL</h2>
@@ -122,68 +128,83 @@ export default function Matriz() {
 
               <div className="cod-card">
                 <h3>2. ANÁLISIS TÉCNICO (POR QUÉ FUNCIONA)</h3>
-                <p>La vulnerabilidad ocurre porque el aplicativo web concatena directamente la entrada del usuario (<code>id</code>) de forma dinámica en la consulta SQL, sin sanitización ni parametrización previa. El código del servidor ejecuta una consulta estructurada de la siguiente manera:</p>
+                <p>La vulnerabilidad ocurre porque el aplicativo web concatena directamente la entrada del usuario (<code>id</code>) de forma dinámica en la consulta SQL, sin sanitización ni parametrización previa.</p>
                 <div className="cod-code-box">
                   <code>SELECT first_name, last_name FROM users WHERE user_id = '$id';</code>
                 </div>
-                <p>Al ingresar el payload, la consulta interna se transforma saltándose los filtros:</p>
-                <div className="cod-code-box">
-                  <code>SELECT first_name, last_name FROM users WHERE user_id = '' OR '1'='1';</code>
-                </div>
-                <p>Dado que la condición <code>'1'='1'</code> siempre es verdadera, el motor de la base de datos ignora la restricción del identificador y devuelve la totalidad de los registros de la tabla de usuarios.</p>
               </div>
 
               <div className="cod-card">
                 <h3>3. PUNTUACIÓN Y SEVERIDAD CVSS V3.1</h3>
                 <p><strong>VECTOR DE ATAQUE:</strong> <code>CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N</code></p>
                 <div className="severity-banner text-high">PUNTAJE BASE: 7.5 [ALTA]</div>
-                <p><em>Justificación:</em> El ataque se realiza de forma remota a través de internet (AV:N), con baja complejidad al no existir contramedidas (AC:L). No se requieren privilegios previos (PR:N) ni interacción de un usuario legítimo (UI:N). El impacto en la confidencialidad es crítico (C:H) ya que expone la base de datos completa de clientes, filtrando identidades y recetas médicas.</p>
               </div>
 
               <div className="cod-card">
                 <h3>4. ESTRATEGIA DE DEFENSAS</h3>
-                <p><strong>POLÍTICA DE PREVENCIÓN:</strong> Se prohíbe la construcción de consultas SQL mediante la concatenación de variables. Todo desarrollo debe implementar <strong>Consultas Parametrizadas (Prepared Statements)</strong>.</p>
+                <p><strong>POLÍTICA DE PREVENCIÓN:</strong> Todo desarrollo debe implementar <strong>Consultas Parametrizadas</strong>.</p>
                 <div className="cod-code-box">
-                  <code>{"// SEGURO: Parámetro aislado del código ejecutable\n$stmt = $conn->prepare(\"SELECT first_name, last_name FROM users WHERE user_id = ?\");\n$stmt->bind_param(\"i\", $id);"}</code>
+                  <code>{'$stmt = $conn->prepare("SELECT first_name, last_name FROM users WHERE user_id = ?");'}</code>
                 </div>
+              </div>
+
+              {/* PUNTO 5: EVIDENCIA VISUAL */}
+              <div className="cod-card">
+                <h3>5. REGISTRO DE EVIDENCIA GRÁFICA</h3>
+                <img src={sqliImg} alt="SQLi Report" className="cod-intel-report" />
+                <span className="cod-intel-caption">// AD-02_SQL_EXFILTRATION_LOG.PNG</span>
+                <p>Captura de la ejecución del payload de inyección SQL en el portal.</p>
               </div>
             </div>
           )}
 
-          {/* 03 XSS */}
-          {seccionActiva === 'xss' && (
-            <div className="animate-fade">
-              <h2>03 // REPORTES TÉCNICOS: CROSS-SITE SCRIPTING REFLEJADO</h2>
-              
-              <div className="cod-card border-medium">
-                <div className="cod-alert-tag medium">AMENAZA DE RIESGO MODERADO</div>
-                <h3>1. EVIDENCIA DEL ATAQUE</h3>
-                <p>El ataque se ejecutó inyectando código de JavaScript malicioso en el campo de entrada del formulario de saludo del portal de clientes.</p>
-                <div className="cod-meta-list">
-                  <div><strong>PAYLOAD UTILIZADO:</strong> <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code></div>
-                </div>
-              </div>
+{/* 03 XSS */}
+{seccionActiva === 'xss' && (
+  <div className="animate-fade">
+    <h2>03 // REPORTES TÉCNICOS: CROSS-SITE SCRIPTING REFLEJADO</h2>
+    
+    <div className="cod-card border-medium">
+      <div className="cod-alert-tag medium">AMENAZA DE RIESGO MODERADO</div>
+      <h3>1. EVIDENCIA DEL ATAQUE</h3>
+      <p>El ataque se ejecutó inyectando código de JavaScript malicioso en el campo de entrada del formulario de saludo del portal de clientes.</p>
+      <div className="cod-meta-list">
+        <div><strong>PAYLOAD UTILIZADO:</strong> <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code></div>
+      </div>
+    </div>
 
-              <div className="cod-card">
-                <h3>2. ANÁLISIS TÉCNICO (POR QUÉ FUNCIONA)</h3>
-                <p>La aplicación web toma el string ingresado por el usuario, lo procesa en el servidor y lo incluye directamente dentro de la respuesta HTML sin codificar los caracteres especiales. Al no sanitizar los caracteres <code>&lt;</code> y <code>&gt;</code>, el navegador de la víctima interpreta que los datos suministrados son etiquetas HTML ejecutables, forzando la ejecución automática del script.</p>
-              </div>
+    <div className="cod-card">
+      <h3>2. ANÁLISIS TÉCNICO (POR QUÉ FUNCIONA)</h3>
+      <p>La aplicación web procesa el string de entrada y lo incluye directamente en el HTML sin codificar. Al no sanitizar <code>&lt;</code> y <code>&gt;</code>, el navegador ejecuta el script.</p>
+    </div>
 
-              <div className="cod-card">
-                <h3>3. PUNTUACIÓN Y SEVERIDAD CVSS V3.1</h3>
-                <p><strong>VECTOR DE ATAQUE:</strong> <code>CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N</code></p>
-                <div className="severity-banner text-medium">PUNTAJE BASE: 6.1 [MEDIA]</div>
-                <p><em>Justificación:</em> Requiere interacción del usuario (UI:R), ya que la víctima debe hacer clic en el link manipulado. El impacto permite robar cookies de sesión de los pacientes o redireccionarlos a portales falsos.</p>
-              </div>
+    <div className="cod-card">
+      <h3>3. PUNTUACIÓN Y SEVERIDAD CVSS V3.1</h3>
+      <p><strong>VECTOR DE ATAQUE:</strong> <code>CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N</code></p>
+      <div className="severity-banner text-medium">PUNTAJE BASE: 6.1 [MEDIA]</div>
+    </div>
 
-              <div className="cod-card">
-                <h3>4. ESTRATEGIA DE DEFENSAS</h3>
-                <p><strong>POLÍTICA DE PREVENCIÓN:</strong> Toda variable renderizada dinámicamente debe pasar por una capa de <strong>Codificación de Salida (Output Encoding)</strong> para convertirse en entidades HTML seguras. Se complementa con el uso de la bandera <code>HttpOnly</code> en las cookies.</p>
-              </div>
-            </div>
-          )}
+    <div className="cod-card">
+      <h3>4. ESTRATEGIA DE DEFENSAS</h3>
+      <p>Toda variable renderizada dinámicamente debe pasar por <strong>Output Encoding</strong> y usar la bandera <code>HttpOnly</code>.</p>
+    </div>
 
-          {/* 04 COMANDOS */}
+    {/* PUNTO 5: EVIDENCIA GRÁFICA */}
+    <div className="cod-card">
+      <h3>5. REGISTRO DE EVIDENCIA GRÁFICA</h3>
+      {xssImg ? (
+        <img src={xssImg} alt="XSS Report" className="cod-intel-report" />
+      ) : (
+        <p>Imagen no cargada</p>
+      )}
+      <span className="cod-intel-caption">// AS-01_XSS_TRACE.PNG</span>
+    </div>
+  </div>
+)}
+
+
+
+
+{/* 04 COMANDOS */}
           {seccionActiva === 'comandos' && (
             <div className="animate-fade">
               <h2>04 // REPORTES TÉCNICOS: INYECCIÓN DE COMANDOS</h2>
@@ -207,6 +228,14 @@ export default function Matriz() {
                 <p><strong>VECTOR DE ATAQUE:</strong> <code>CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H</code></p>
                 <div className="severity-banner text-high">PUNTAJE BASE: 8.8 [ALTA]</div>
                 <p><em>Justificación:</em> Permite el control absoluto del sistema operativo del servidor (C:H/I:H/A:H), pudiendo alterar archivos, inyectar código persistente o botar el servidor web de la farmacia por completo.</p>
+              </div>
+
+              {/* PUNTO 5: EVIDENCIA GRÁFICA */}
+              <div className="cod-card">
+                <h3>5. REGISTRO DE EVIDENCIA GRÁFICA</h3>
+                <img src={comandosImg} alt="Command Injection Report" className="cod-intel-report" />
+                <span className="cod-intel-caption">// AI-01_SHELL_EXEC_LOG.PNG</span>
+                <p>Captura de la ejecución del comando para leer archivos sensibles del sistema.</p>
               </div>
             </div>
           )}
