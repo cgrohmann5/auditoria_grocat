@@ -573,10 +573,6 @@ code {
   gap: 10px;
 }
 
-
-
-
-
 .cod-table td {
   vertical-align: top;
   line-height: 1.4;
@@ -587,6 +583,82 @@ code {
   font-weight: bold;
   white-space: nowrap; /* Evita que el código (AV:N) se corte */
 }
+
+
+
+
+
+
+/* Escaneo táctico sobre el dashboard */
+.cod-dashboard::after {
+  content: "";
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.1) 50%);
+  background-size: 100% 4px;
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.3;
+}
+
+.cod-nav-btn:active {
+  animation: glitch-hit 0.1s linear;
+}
+
+@keyframes glitch-hit {
+  0% { transform: translate(0, 0); background-color: var(--cod-orange); }
+  25% { transform: translate(-5px, 2px); }
+  50% { transform: translate(5px, -2px); }
+  100% { transform: translate(0, 0); }
+}
+
+.border-high {
+  animation: border-flash 1s infinite alternate;
+}
+
+@keyframes border-flash {
+  from { border-color: var(--cod-critico); box-shadow: 0 0 5px var(--cod-critico); }
+  to { border-color: #000; box-shadow: 0 0 20px var(--cod-critico); }
+}
+
+p {
+  overflow: hidden;
+  border-right: 2px solid var(--cod-orange);
+  animation: typing 2s steps(40, end);
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+p {
+  overflow: hidden;
+  border-right: 2px solid var(--cod-orange);
+  animation: typing 2s steps(40, end);
+}
+
+@keyframes typing {
+  from { width: 0 }
+  to { width: 100% }
+}
+
+.animate-fade {
+  animation: impact-shake 0.5s ease-out;
+}
+
+@keyframes impact-shake {
+  0% { transform: translate(0, 0) rotate(0deg); }
+  20% { transform: translate(-10px, 0) rotate(-1deg); }
+  40% { transform: translate(10px, 0) rotate(1deg); }
+  60% { transform: translate(-5px, 0) rotate(0deg); }
+  100% { transform: translate(0, 0) rotate(0deg); }
+}
+
+
 
 /* ==========================================================================
    MEDIA QUERIES - RESPONSIVIDAD PARA DISPOSITIVOS MÓVILES

@@ -578,8 +578,9 @@ export default function Matriz() {
               </div>
 
               <div className="cod-card command-center-card">
-                <h3>DATOS DEL OPERADOR</h3>
+                <h3>DATOS DEL CREADOR</h3>
                 <div className="visor-row"><strong>ID USUARIO:</strong> <span className="highlight-orange">cgrohmann5</span></div>
+                <div className="visor-row"><strong>NOMBRE:</strong> <span className="highlight-orange">Catalina Grohmann</span></div> {/* <--- AGREGA ESTA LÍNEA */}
                 <div className="visor-row"><strong>ESTADO DEL REPOSITORIO:</strong> <span className="status-planned">VERIFICADO</span></div>
                 
                 {/* INTERFAZ DEL BOTÓN TÁCTICO INTEGRADA */}
