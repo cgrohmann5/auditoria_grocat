@@ -554,11 +554,18 @@ code {
 }
 
 
+/* HEADER MILITAR */
 .cod-header {
+  background-color: var(--cod-bg-dark);
+  color: #ffffff !important;
+  /* AJUSTA ESTE PADDING: el primer número es vertical, el segundo horizontal */
+  padding: 10px 20px; 
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  justify-content: space-between; /* Distribuye el espacio entre logo, botones y status */
-  padding: 0 20px;
+  border-bottom: 4px solid var(--cod-orange);
+  width: 100% !important;
+  height: auto; /* O pon un valor fijo como '60px' si quieres que siempre sea igual */
 }
 
 .cod-header-actions {
@@ -566,40 +573,6 @@ code {
   gap: 10px;
 }
 
-.cod-header-btn {
-  background: transparent;
-  border: 1px solid var(--cod-orange); /* Usa tu color naranja táctico */
-  color: var(--cod-orange);
-  padding: 5px 10px;
-  font-family: 'Monospace', sans-serif;
-  cursor: pointer;
-  font-size: 0.7rem;
-  transition: 0.3s;
-}
-
-.cod-header-btn:hover {
-  background: var(--cod-orange);
-  color: #000;
-}
-
-/* Estilo base (Modo Día) */
-.cod-dashboard {
-  background-color: #ffffff;
-  color: #333;
-  transition: all 0.3s ease;
-}
-
-/* Estilo para Modo Noche */
-.cod-dashboard.dark-mode {
-  background-color: #121212;
-  color: #e0e0e0;
-}
-
-/* Ejemplo: Cambiar el fondo de las tarjetas en modo oscuro */
-.cod-dashboard.dark-mode .cod-card {
-  background-color: #1a1a1a;
-  border-color: #333;
-}
 
 
 

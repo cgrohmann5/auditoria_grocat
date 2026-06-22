@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import html2pdf from 'html2pdf.js';
 import './App.css';
 
 // Importación de las imágenes
@@ -10,23 +9,6 @@ import xssImg from './img_grocat/xss_grocat.png';
 export default function Matriz() {
   const [seccionActiva, setSeccionActiva] = useState('resumen');
   const [riesgoSeleccionado, setRiesgoSeleccionado] = useState(null);
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
-  useEffect(() => {
-    const savedTheme = localStorage.getItem('theme');
-    if (savedTheme === 'dark') setIsDarkMode(true);
-  }, []);
-
-  const toggleTheme = () => {
-    const nuevoModo = !isDarkMode;
-    setIsDarkMode(nuevoModo);
-    localStorage.setItem('theme', nuevoModo ? 'dark' : 'light');
-  };
-
-  const downloadPDF = () => {
-    const element = document.querySelector('.cod-dashboard');
-    html2pdf().from(element).save('Auditoria_FarmaSalud.pdf');
-  };
 
   const riesgosData = {
       'R-01': { 
@@ -56,20 +38,12 @@ export default function Matriz() {
     };
 
   return (
-    <div className={`cod-dashboard ${isDarkMode ? 'dark-mode' : ''}`}>
+    <div className="cod-dashboard">
       {/* HEADER TÁCTICO */}
       <header className="cod-header">
         <div className="cod-logo-area">
           <span className="cod-title-main">FARMASALUD</span>
           <span className="cod-title-sub">FUNDAMENTOS DE SEGURIDAD DE LA INFORMACIÓN // AUDITORIA_GROCAT</span>
-        </div>
-
-        {/* BOTONES TÁCTICOS */}
-        <div className="cod-header-actions">
-          <button className="cod-header-btn" onClick={toggleTheme}>
-            {isDarkMode ? 'MODO DÍA' : 'MODO NOCHE'}
-          </button>
-          <button className="cod-header-btn" onClick={downloadPDF}>PDF</button>
         </div>
 
         <div className="cod-system-status">
