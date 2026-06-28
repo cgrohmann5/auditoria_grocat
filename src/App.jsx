@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import './App.css';
 
 // Importación de las imágenes
@@ -153,37 +153,53 @@ export default function Matriz() {
               </ul>
             </div>
 
-            <div className="cod-card">
-              <h3>3. RESUMEN DEL PERFIL DE RIESGO Y SEVERIDAD</h3>
-              <p>Cada letra representa una métrica que define la facilidad y el impacto del ataque:</p>
-              
-              <div className="table-responsive">
-                <table className="cod-table">
-                  <thead>
-                    <tr>
-                      <th>Métrica</th>
-                      <th>Descripción Técnica</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr><td><strong>AV:N</strong></td><td><strong>(Attack Vector - Network):</strong> El ataque es remoto (a través de la red). No requiere acceso físico ni local al servidor.</td></tr>
-                    <tr><td><strong>AC:L</strong></td><td><strong>(Attack Complexity - Low):</strong> La complejidad es baja. No se requieren condiciones especiales; el atacante puede repetir el ataque fácilmente.</td></tr>
-                    <tr><td><strong>PR:N</strong></td><td><strong>(Privileges Required - None):</strong> No se requieren privilegios. El atacante no necesita ser usuario registrado ni administrador.</td></tr>
-                    <tr><td><strong>UI:N</strong></td><td><strong>(User Interaction - None):</strong> No se requiere interacción del usuario. El ataque ocurre de forma autónoma.</td></tr>
-                    <tr><td><strong>S:U</strong></td><td><strong>(Scope - Unchanged):</strong> El impacto no se propaga a otros componentes; el daño se limita al componente vulnerable.</td></tr>
-                    <tr><td><strong>C:H</strong></td><td><strong>(Confidentiality - High):</strong> El impacto en la confidencialidad es alto. Acceso total a datos sensibles (fichas clínicas).</td></tr>
-                    <tr><td><strong>I:N</strong></td><td><strong>(Integrity - None):</strong> El impacto en la integridad es nulo. El atacante no puede modificar los datos.</td></tr>
-                    <tr><td><strong>A:N</strong></td><td><strong>(Availability - None):</strong> El impacto en la disponibilidad es nulo. El ataque no causa la caída del sistema.</td></tr>
-                  </tbody>
-                </table>
-              </div>
+<div className="cod-card">
+  <h3>3. RESUMEN DEL PERFIL DE RIESGO Y SEVERIDAD</h3>
+  <p>Cada letra representa una métrica que define la facilidad y el impacto del ataque:</p>
 
-              <p style={{ marginTop: '15px', fontFamily: 'monospace' }}>
-                <strong>VECTOR:</strong> <code>CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N</code>
-              </p>
+  <div style={{ overflowX: 'auto', marginTop: '12px' }}>
+    <table style={{ width: '100%', borderCollapse: 'collapse', tableLayout: 'fixed' }}>
+      <colgroup>
+        <col style={{ width: '130px' }} />
+        <col />
+      </colgroup>
+      <thead>
+        <tr>
+          <th style={{ padding: '10px 14px', textAlign: 'left', borderBottom: '2px solid #e87a5a', fontSize: '13px', letterSpacing: '0.05em' }}>Métrica</th>
+          <th style={{ padding: '10px 14px', textAlign: 'left', borderBottom: '2px solid #e87a5a', fontSize: '13px', letterSpacing: '0.05em' }}>Descripción Técnica</th>
+        </tr>
+      </thead>
+      <tbody>
+        {[
+          ['AV:N', '(Attack Vector - Network):', 'El ataque es remoto (a través de la red). No requiere acceso físico ni local al servidor.'],
+          ['AC:L', '(Attack Complexity - Low):', 'La complejidad es baja. No se requieren condiciones especiales; el atacante puede repetir el ataque fácilmente.'],
+          ['PR:N', '(Privileges Required - None):', 'No se requieren privilegios. El atacante no necesita ser usuario registrado ni administrador.'],
+          ['UI:N', '(User Interaction - None):', 'No se requiere interacción del usuario. El ataque ocurre de forma autónoma.'],
+          ['S:U',  '(Scope - Unchanged):', 'El impacto no se propaga a otros componentes; el daño se limita al componente vulnerable.'],
+          ['C:H',  '(Confidentiality - High):', 'El impacto en la confidencialidad es alto. Acceso total a datos sensibles (fichas clínicas).'],
+          ['I:N',  '(Integrity - None):', 'El impacto en la integridad es nulo. El atacante no puede modificar los datos.'],
+          ['A:N',  '(Availability - None):', 'El impacto en la disponibilidad es nulo. El ataque no causa la caída del sistema.'],
+        ].map(([metric, label, desc], i) => (
+          <tr key={metric} style={{ backgroundColor: i % 2 === 0 ? 'transparent' : 'rgba(232,122,90,0.05)' }}>
+            <td style={{ padding: '10px 14px', borderBottom: '1px solid rgba(232,122,90,0.2)', fontFamily: 'monospace', fontWeight: 700, whiteSpace: 'nowrap', verticalAlign: 'top' }}>
+              {metric}
+            </td>
+            <td style={{ padding: '10px 14px', borderBottom: '1px solid rgba(232,122,90,0.2)', fontSize: '14px', lineHeight: '1.5', verticalAlign: 'top' }}>
+              <strong>{label}</strong> {desc}
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
 
-              <div className="severity-banner text-high">PUNTAJE BASE: 7.5 [ALTA]</div>
-            </div>
+  <p style={{ marginTop: '15px', fontFamily: 'monospace' }}>
+    <strong>VECTOR:</strong> <code>CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N</code>
+  </p>
+
+  <div className="severity-banner text-high">PUNTAJE BASE: 7.5 [ALTA]</div>
+</div>
+
 
             <div className="cod-card">
               <h3>4. ANÁLISIS DE IMPACTO: INYECCIÓN SQL (SQLi)</h3>
@@ -196,7 +212,24 @@ export default function Matriz() {
               </p>
             </div>
 
-              {/* PUNTO 5: EVIDENCIA VISUAL */}
+            <div className="cod-card">
+              <h3>5. POLÍTICAS DE PREVENCIÓN — MITIGACIÓN EN ORIGEN</h3>
+              <p><strong>Objetivo:</strong> Eliminar la vulnerabilidad de Inyección SQL atacando la causa raíz: la concatenación de entrada de usuario en consultas SQL.</p>
+              <br/>
+              <p><strong>Medidas Específicas:</strong></p>
+              <ul className="technical-list">
+                <li><strong>Consultas Parametrizadas (Prepared Statements):</strong> Reemplazar todas las consultas con concatenación por Prepared Statements usando placeholders (<code>?</code> o <code>:param</code>). El servidor de BD los vinculará de forma segura, separando el código SQL de los datos.</li>
+                <li><strong>Uso de ORM seguro:</strong> Implementar un Object-Relational Mapping (p. ej., <strong>Sequelize</strong> en Node.js o <strong>Eloquent</strong> en PHP) que genere automáticamente Prepared Statements.</li>
+                <li><strong>Validación de entrada estricta:</strong> Whitelist de caracteres permitidos. Si se espera un ID numérico, rechazar cualquier entrada que contenga comillas, guiones o caracteres especiales.</li>
+                <li><strong>Principio de menor privilegio en BD:</strong> Crear cuentas de usuario MySQL con permisos limitados. La cuenta de aplicación debe tener acceso solo a SELECT, INSERT y UPDATE en tablas específicas, no privilegios de DROP o ALTER.</li>
+                <li><strong>Capacitación de desarrolladores:</strong> Entrenar al equipo en prácticas seguras de codificación, enfatizando que <strong>nunca</strong> se concatene entrada de usuario directamente en consultas SQL.</li>
+              </ul>
+              <p style={{ marginTop: '15px', color: '#666' }}>
+                <strong>Marco de referencia:</strong> <strong>OWASP Top 10 (A1:2021 – Broken Access Control)</strong> y <strong>CIS Controls 3.0 (v8.2 – Address Unauthorized Software)</strong>
+              </p>
+            </div>
+
+              {/* PUNTO 6: EVIDENCIA VISUAL */}
               <div className="cod-card">
                 <h3>5. REGISTRO DE EVIDENCIA GRÁFICA</h3>
                 <img src={sqliImg} alt="SQLi Report" className="cod-intel-report" />
@@ -309,7 +342,24 @@ export default function Matriz() {
     </div>
 
     <div className="cod-card">
-      <h3>5. REGISTRO DE EVIDENCIA GRÁFICA</h3>
+      <h3>5. POLÍTICAS DE PREVENCIÓN — MITIGACIÓN EN ORIGEN</h3>
+      <p><strong>Objetivo:</strong> Prevenir que el navegador interprete datos de entrada como código ejecutable.</p>
+      <br/>
+      <p><strong>Medidas Específicas:</strong></p>
+      <ul className="technical-list">
+        <li><strong>Output Encoding (Contexto HTML):</strong> Convertir caracteres especiales a entidades HTML. <code>&lt;</code> → <code>&amp;lt;</code>, <code>&gt;</code> → <code>&amp;gt;</code>, <code>"</code> → <code>&amp;quot;</code>. Usar funciones como <code>htmlspecialchars()</code> en PHP o <code>DOMPurify</code> en JavaScript.</li>
+        <li><strong>Content Security Policy (CSP):</strong> Implementar cabecera HTTP <code>Content-Security-Policy: default-src 'self'; script-src 'self';</code> que solo permita ejecutar scripts desde el dominio de FarmaSalud, bloqueando scripts inline o embebidos.</li>
+        <li><strong>Atributos de Cookies seguras:</strong> Configurar cookies de sesión con flags <code>HttpOnly</code> (evita acceso desde JavaScript) y <code>Secure</code> (solo por HTTPS).</li>
+        <li><strong>Whitelist de HTML permitido:</strong> Si la aplicación necesita renderizar HTML, usar bibliotecas de sanitización (p. ej., <strong>DOMPurify</strong>, <strong>Sanitize.html</strong>) para eliminar etiquetas peligrosas.</li>
+        <li><strong>Validación de entrada:</strong> Rechazar cualquier dato que contenga caracteres no esperados. Si se espera un nombre, rechazar <code>&lt;, &gt;, ", ', ;</code>.</li>
+      </ul>
+      <p style={{ marginTop: '15px', color: '#666' }}>
+        <strong>Marco de referencia:</strong> <strong>OWASP Top 10 (A7:2021 – Cross-Site Scripting XSS)</strong> y <strong>NIST SP 800-53 (SI-10 – Information System Monitoring)</strong>
+      </p>
+    </div>
+
+    <div className="cod-card">
+      <h3>6. REGISTRO DE EVIDENCIA GRÁFICA</h3>
       {xssImg ? (
         <img src={xssImg} alt="XSS Report" className="cod-intel-report" />
       ) : (
@@ -344,22 +394,22 @@ export default function Matriz() {
               <h3>3. RESUMEN DEL PERFIL DE RIESGO: INYECCIÓN DE COMANDOS</h3>
               
               <div className="table-responsive">
-                <table className="cod-table">
-                  <thead style={{ backgroundColor: '#222', color: '#fff' }}>
+                <table style={{ width: '100%', borderCollapse: 'collapse', backgroundColor: 'transparent' }}>
+                  <thead>
                     <tr>
-                      <th>MÉTRICA</th>
-                      <th>DESCRIPCIÓN TÉCNICA (CMD INJECTION)</th>
+                      <th style={{ backgroundColor: '#1a1a1a', color: '#fff', padding: '15px 18px', fontWeight: 'bold', fontSize: '0.95rem', textAlign: 'left', textTransform: 'uppercase', letterSpacing: '1px', borderRight: '3px solid #d4a574', borderBottom: '3px solid #d4a574' }}>MÉTRICA</th>
+                      <th style={{ backgroundColor: '#8b7355', color: '#fff', padding: '15px 18px', fontWeight: 'bold', fontSize: '0.95rem', textAlign: 'left', textTransform: 'uppercase', letterSpacing: '1px', borderBottom: '3px solid #d4a574' }}>DESCRIPCIÓN TÉCNICA (CMD INJECTION)</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr><td><strong>AV : N</strong></td><td>(Attack Vector - Network): Ataque remoto sin necesidad de acceso físico.</td></tr>
-                    <tr><td><strong>AC : L</strong></td><td>(Attack Complexity - Low): Ejecución inmediata mediante comandos estándar.</td></tr>
-                    <tr><td><strong>PR : N</strong></td><td>(Privileges Required - None): No requiere autenticación.</td></tr>
-                    <tr><td><strong>UI : N</strong></td><td>(User Interaction - None): El ataque ocurre de forma autónoma.</td></tr>
-                    <tr><td><strong>S : U</strong></td><td>(Scope - Unchanged): El impacto se mantiene dentro del servidor comprometido.</td></tr>
-                    <tr><td><strong>C : H</strong></td><td>(Confidentiality - High): Acceso total a archivos del servidor.</td></tr>
-                    <tr><td><strong>I : H</strong></td><td>(Integrity - High): Control total para modificar o borrar archivos.</td></tr>
-                    <tr><td><strong>A : H</strong></td><td>(Availability - High): Capacidad de detener o destruir la infraestructura.</td></tr>
+                    <tr style={{ backgroundColor: '#f5e6d3' }}><td style={{ padding: '12px 15px', fontWeight: 'bold', borderBottom: '1px solid #d4c5a9', color: '#333' }}><strong>AV : N</strong></td><td style={{ padding: '12px 15px', borderBottom: '1px solid #d4c5a9', color: '#333' }}>(Attack Vector - Network): Ataque remoto sin necesidad de acceso físico.</td></tr>
+                    <tr style={{ backgroundColor: '#f5e6d3' }}><td style={{ padding: '12px 15px', fontWeight: 'bold', borderBottom: '1px solid #d4c5a9', color: '#333' }}><strong>AC : L</strong></td><td style={{ padding: '12px 15px', borderBottom: '1px solid #d4c5a9', color: '#333' }}>(Attack Complexity - Low): Ejecución inmediata mediante comandos estándar.</td></tr>
+                    <tr style={{ backgroundColor: '#f5e6d3' }}><td style={{ padding: '12px 15px', fontWeight: 'bold', borderBottom: '1px solid #d4c5a9', color: '#333' }}><strong>PR : N</strong></td><td style={{ padding: '12px 15px', borderBottom: '1px solid #d4c5a9', color: '#333' }}>(Privileges Required - None): No requiere autenticación.</td></tr>
+                    <tr style={{ backgroundColor: '#f5e6d3' }}><td style={{ padding: '12px 15px', fontWeight: 'bold', borderBottom: '1px solid #d4c5a9', color: '#333' }}><strong>UI : N</strong></td><td style={{ padding: '12px 15px', borderBottom: '1px solid #d4c5a9', color: '#333' }}>(User Interaction - None): El ataque ocurre de forma autónoma.</td></tr>
+                    <tr style={{ backgroundColor: '#f5e6d3' }}><td style={{ padding: '12px 15px', fontWeight: 'bold', borderBottom: '1px solid #d4c5a9', color: '#333' }}><strong>S : U</strong></td><td style={{ padding: '12px 15px', borderBottom: '1px solid #d4c5a9', color: '#333' }}>(Scope - Unchanged): El impacto se mantiene dentro del servidor comprometido.</td></tr>
+                    <tr style={{ backgroundColor: '#f5e6d3' }}><td style={{ padding: '12px 15px', fontWeight: 'bold', borderBottom: '1px solid #d4c5a9', color: '#333' }}><strong>C : H</strong></td><td style={{ padding: '12px 15px', borderBottom: '1px solid #d4c5a9', color: '#333' }}>(Confidentiality - High): Acceso total a archivos del servidor.</td></tr>
+                    <tr style={{ backgroundColor: '#f5e6d3' }}><td style={{ padding: '12px 15px', fontWeight: 'bold', borderBottom: '1px solid #d4c5a9', color: '#333' }}><strong>I : H</strong></td><td style={{ padding: '12px 15px', borderBottom: '1px solid #d4c5a9', color: '#333' }}>(Integrity - High): Control total para modificar o borrar archivos.</td></tr>
+                    <tr style={{ backgroundColor: '#f5e6d3' }}><td style={{ padding: '12px 15px', fontWeight: 'bold', borderBottom: '1px solid #d4c5a9', color: '#333' }}><strong>A : H</strong></td><td style={{ padding: '12px 15px', color: '#333' }}>(Availability - High): Capacidad de detener o destruir la infraestructura.</td></tr>
                   </tbody>
                 </table>
               </div>
@@ -374,7 +424,35 @@ export default function Matriz() {
               </div>
             </div>
 
-              {/* PUNTO 5: EVIDENCIA GRÁFICA */}
+            <div className="cod-card">
+              <h3>4. ANÁLISIS DE IMPACTO: INYECCIÓN DE COMANDOS</h3>
+              <p>
+                <strong>TOMA DE CONTROL TOTAL DEL SERVIDOR:</strong> Es el impacto crítico más grave. El atacante ejecuta comandos del sistema operativo con los privilegios del proceso de la aplicación web (usuario www-data o similar).
+                <br/><br/>
+                <strong>Activos afectados:</strong> Sistema operativo del servidor, archivos de configuración, base de datos, credenciales almacenadas, e incluso sistemas conectados en la red interna.
+                <br/><br/>
+                <strong>Riesgo:</strong> Instalación de backdoors, exfiltración masiva de datos, cierre de servicios (DoS) y propagación lateral a otras máquinas de la infraestructura de FarmaSalud.
+              </p>
+            </div>
+
+            <div className="cod-card">
+              <h3>5. POLÍTICAS DE PREVENCIÓN — MITIGACIÓN EN ORIGEN</h3>
+              <p><strong>Objetivo:</strong> Prohibir la ejecución de comandos del shell desde el código de la aplicación web.</p>
+              <br/>
+              <p><strong>Medidas Específicas:</strong></p>
+              <ul className="technical-list">
+                <li><strong>Prohibición absoluta de funciones de shell:</strong> Eliminar/deshabilitar todas las invocaciones de <code>system()</code>, <code>exec()</code>, <code>shell_exec()</code>, <code>passthru()</code>, <code>popen()</code> en PHP (equivalentes en otros lenguajes). Si es absolutamente necesario, usar API nativas en lugar de shell.</li>
+                <li><strong>Ejemplo seguro (en lugar de shell):</strong> Si se necesita hacer ping, usar librerías de red nativas en Node.js (<code>net.Socket</code>) o Python (<code>icmplib</code>) en lugar de <code>system('ping')</code>.</li>
+                <li><strong>Validación y whitelist estricta:</strong> Si hay un campo de entrada, validar contra una lista explícita de valores permitidos. P.ej., si el usuario elige entre "192.168.1.1", "10.0.0.1", solo permitir esas IPs.</li>
+                <li><strong>Principio de menor privilegio (SO):</strong> Ejecutar el servicio web (apache/nginx) con la cuenta <code>www-data</code> de menor privilegio, NO como <code>root</code>. Esto limita el daño en caso de compromiso.</li>
+                <li><strong>Aislamiento de procesos (containerización):</strong> Desplegar la aplicación en Docker con políticas AppArmor/SELinux para limitar qué archivos y comandos puede ejecutar el contenedor.</li>
+              </ul>
+              <p style={{ marginTop: '15px', color: '#666' }}>
+                <strong>Marco de referencia:</strong> <strong>OWASP Top 10 (A6:2021 – Vulnerable and Outdated Components)</strong> y <strong>CIS Controls 3.0 (v6.1 – Establish and Maintain a Process for Remotely Managing System Components)</strong>
+              </p>
+            </div>
+
+              {/* PUNTO 6: EVIDENCIA GRÁFICA */}
               <div className="cod-card">
                 <h3>5. REGISTRO DE EVIDENCIA GRÁFICA</h3>
                 <img src={comandosImg} alt="Command Injection Report" className="cod-intel-report" />
@@ -527,10 +605,61 @@ export default function Matriz() {
           {/* 07 CUADRO DE CONTROLES */}
           {seccionActiva === 'controles' && (
   <div className="animate-fade">
-    <h2 className="cyber-title">07 // CONTROLES DE SEGURIDAD</h2>
+    <h2 className="cyber-title">07 // CONTROLES DE SEGURIDAD Y TABLA CVSS COMPARATIVA</h2>
     
     <div className="cod-card">
-      <h3>MATRIZ DE IMPLEMENTACIÓN (DEFENSA EN PROFUNDIDAD)</h3>
+      <h3>1. TABLA CVSS COMPARATIVA — SEVERIDAD DE LAS 3 VULNERABILIDADES</h3>
+      <p><strong>Análisis comparativo CVSS v3.1 Base Scores:</strong></p>
+      <div style={{ overflowX: 'auto', marginTop: '1rem' }}>
+        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.85rem', tableLayout: 'fixed' }}>
+          <colgroup>
+            <col style={{ width: '8%' }} />
+            <col style={{ width: '15%' }} />
+            <col style={{ width: '28%' }} />
+            <col style={{ width: '12%' }} />
+            <col style={{ width: '37%' }} />
+          </colgroup>
+          <thead>
+            <tr style={{ backgroundColor: 'var(--cod-bg-dark)', color: '#fff' }}>
+              <th style={{ padding: '10px', textAlign: 'left' }}>ID</th>
+              <th style={{ padding: '10px', textAlign: 'left' }}>VULNERABILIDAD</th>
+              <th style={{ padding: '10px', textAlign: 'left' }}>VECTOR CVSS 3.1</th>
+              <th style={{ padding: '10px', textAlign: 'center' }}>SCORE</th>
+              <th style={{ padding: '10px', textAlign: 'left' }}>SEVERIDAD</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style={{ borderBottom: '1px solid var(--cod-border)' }}>
+              <td style={{ padding: '10px' }}><strong>R-01</strong></td>
+              <td style={{ padding: '10px' }}><strong>Inyección SQL (SQLi)</strong></td>
+              <td style={{ padding: '10px', fontFamily: 'monospace', fontSize: '0.75rem' }}>AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:N/A:N</td>
+              <td style={{ padding: '10px', textAlign: 'center', color: 'var(--cod-alto)', fontWeight: 'bold', fontSize: '1.1rem' }}>7.5</td>
+              <td style={{ padding: '10px' }}><span style={{ backgroundColor: 'var(--cod-alto)', color: '#fff', padding: '3px 8px', borderRadius: '3px' }}>ALTA</span></td>
+            </tr>
+            <tr style={{ borderBottom: '1px solid var(--cod-border)', backgroundColor: '#f9fafb' }}>
+              <td style={{ padding: '10px' }}><strong>R-02</strong></td>
+              <td style={{ padding: '10px' }}><strong>Command Injection</strong></td>
+              <td style={{ padding: '10px', fontFamily: 'monospace', fontSize: '0.75rem' }}>AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:H</td>
+              <td style={{ padding: '10px', textAlign: 'center', color: 'var(--cod-critico)', fontWeight: 'bold', fontSize: '1.1rem' }}>9.8</td>
+              <td style={{ padding: '10px' }}><span style={{ backgroundColor: 'var(--cod-critico)', color: '#fff', padding: '3px 8px', borderRadius: '3px' }}>CRÍTICA</span></td>
+            </tr>
+            <tr>
+              <td style={{ padding: '10px' }}><strong>R-03</strong></td>
+              <td style={{ padding: '10px' }}><strong>XSS Reflejado</strong></td>
+              <td style={{ padding: '10px', fontFamily: 'monospace', fontSize: '0.75rem' }}>AV:N/AC:L/PR:N/UI:R/S:C/C:L/I:L/A:N</td>
+              <td style={{ padding: '10px', textAlign: 'center', color: 'var(--cod-alto)', fontWeight: 'bold', fontSize: '1.1rem' }}>6.1</td>
+              <td style={{ padding: '10px' }}><span style={{ backgroundColor: 'var(--cod-alto)', color: '#fff', padding: '3px 8px', borderRadius: '3px' }}>MEDIA</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p style={{ marginTop: '1rem', fontSize: '0.85rem', color: '#666' }}>
+        <strong>Interpretación:</strong> La Inyección de Comandos (9.8) es la amenaza más grave por su impacto total en CIA (Confidentiality, Integrity, Availability). SQL Injection (7.5) afecta principalmente confidencialidad. XSS (6.1) requiere interacción del usuario pero afecta integridad y confidencialidad en el contexto de la sesión.
+      </p>
+    </div>
+
+    <div className="cod-card">
+      <h3>2. MATRIZ DE IMPLEMENTACIÓN (DEFENSA EN PROFUNDIDAD)</h3>
       <div style={{ overflowX: 'auto' }}>
         <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem', tableLayout: 'fixed' }}>
           <colgroup>
@@ -571,16 +700,71 @@ export default function Matriz() {
               <td style={{ padding: '10px', color: 'var(--cod-critico)', fontWeight: 'bold' }}>PENDIENTE</td>
               <td style={{ padding: '10px' }}>Inyección de Comandos</td>
             </tr>
-            <tr>
+            <tr style={{ borderBottom: '1px solid var(--cod-border)', backgroundColor: '#f9fafb' }}>
               <td style={{ padding: '10px' }}><strong>CTRL-04</strong></td>
               <td style={{ padding: '10px' }}>Detectivo</td>
-              <td style={{ padding: '10px' }}>Despliegue de un <strong>Web Application Firewall (WAF)</strong> perimetral en producción.</td>
+              <td style={{ padding: '10px' }}>Despliegue de un <strong>Web Application Firewall (WAF)</strong> perimetral en producción para bloquear payloads maliciosos.</td>
               <td style={{ padding: '10px', color: 'var(--cod-alto)', fontWeight: 'bold' }}>PLANIFICADO</td>
               <td style={{ padding: '10px' }}>Transversal (SQLi, XSS, CmdInj)</td>
+            </tr>
+            <tr style={{ borderBottom: '1px solid var(--cod-border)' }}>
+              <td style={{ padding: '10px' }}><strong>CTRL-05</strong></td>
+              <td style={{ padding: '10px' }}>Preventivo</td>
+              <td style={{ padding: '10px' }}>Cabeceras HTTP de seguridad: <code>Content-Security-Policy</code>, <code>X-XSS-Protection</code>, <code>Strict-Transport-Security</code>.</td>
+              <td style={{ padding: '10px', color: 'var(--cod-critico)', fontWeight: 'bold' }}>PENDIENTE</td>
+              <td style={{ padding: '10px' }}>XSS Reflejado</td>
+            </tr>
+            <tr>
+              <td style={{ padding: '10px' }}><strong>CTRL-06</strong></td>
+              <td style={{ padding: '10px' }}>Administrativo</td>
+              <td style={{ padding: '10px' }}>Principio de menor privilegio en cuentas de servicio (BD: usuario MySQL limitado, SO: www-data en lugar de root).</td>
+              <td style={{ padding: '10px', color: 'var(--cod-alto)', fontWeight: 'bold' }}>PLANIFICADO</td>
+              <td style={{ padding: '10px' }}>SQLi / Command Injection</td>
+            </tr>
+            <tr style={{ borderBottom: '1px solid var(--cod-border)', backgroundColor: '#f9fafb' }}>
+              <td style={{ padding: '10px' }}><strong>CTRL-07</strong></td>
+              <td style={{ padding: '10px' }}>Detectivo</td>
+              <td style={{ padding: '10px' }}><strong>Auditoría centralizada de logs + SIEM (Security Information and Event Management)</strong> para registrar y correlacionar intentos de inyección, accesos anormales a BD, cambios de configuración.</td>
+              <td style={{ padding: '10px', color: 'var(--cod-alto)', fontWeight: 'bold' }}>PLANIFICADO</td>
+              <td style={{ padding: '10px' }}>Transversal (detección de ataques en progreso)</td>
+            </tr>
+            <tr>
+              <td style={{ padding: '10px' }}><strong>CTRL-08</strong></td>
+              <td style={{ padding: '10px' }}>Administrativo</td>
+              <td style={{ padding: '10px' }}><strong>Capacitación anual de seguridad</strong> para desarrolladores sobre OWASP Top 10, prácticas seguras de codificación (SAST), y protocolo de respuesta a incidentes.</td>
+              <td style={{ padding: '10px', color: 'var(--cod-alto)', fontWeight: 'bold' }}>PLANIFICADO</td>
+              <td style={{ padding: '10px' }}>Transversal (prevención del factor humano)</td>
             </tr>
           </tbody>
         </table>
       </div>
+    </div>
+
+    <div className="cod-card">
+      <h3>3. REFERENCIAS A MARCOS DE SEGURIDAD INTERNACIONALES</h3>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1.5rem', marginTop: '1rem' }}>
+        <div style={{ border: '1px solid #ddd', padding: '15px', borderRadius: '5px' }}>
+          <p style={{ fontWeight: 'bold', color: 'var(--cod-critico)', marginBottom: '8px' }}>OWASP TOP 10 2021</p>
+          <ul style={{ margin: '0', paddingLeft: '20px', fontSize: '0.9rem' }}>
+            <li><strong>A03:2021 – Injection:</strong> CTRL-01 (SQLi) directamente referenciado.</li>
+            <li><strong>A07:2021 – Cross-Site Scripting (XSS):</strong> CTRL-02, CTRL-05 abordan XSS.</li>
+            <li><strong>A06:2021 – Vulnerable and Outdated Components:</strong> CTRL-03 elimina funciones de shell.</li>
+            <li><strong>A05:2021 – Access Control:</strong> CTRL-06, CTRL-08 (capacitación en seguridad).</li>
+          </ul>
+        </div>
+        <div style={{ border: '1px solid #ddd', padding: '15px', borderRadius: '5px' }}>
+          <p style={{ fontWeight: 'bold', color: 'var(--cod-critico)', marginBottom: '8px' }}>NIST SP 800-53 (Rev. 5)</p>
+          <ul style={{ margin: '0', paddingLeft: '20px', fontSize: '0.9rem' }}>
+            <li><strong>SI-10 – Information System Monitoring:</strong> CTRL-04 (WAF), CTRL-07 (SIEM).</li>
+            <li><strong>SC-7 – Boundary Protection:</strong> Segmentación DMZ + CTRL-04 (WAF).</li>
+            <li><strong>AC-2 – Account Management:</strong> CTRL-06 (menor privilegio).</li>
+            <li><strong>AT-2 – Security Awareness Training:</strong> CTRL-08 (capacitación anual).</li>
+          </ul>
+        </div>
+      </div>
+      <p style={{ marginTop: '1rem', fontSize: '0.85rem', color: '#666', fontStyle: 'italic' }}>
+        <strong>Alineación con PCI-DSS 4.0 y HIPAA:</strong> Todos los controles cumplen con requisitos de segmentación (PCI 1.0), auditoría (HIPAA 164.312), y capacitación (HIPAA 164.308).
+      </p>
     </div>
   </div>
 )}
@@ -763,7 +947,7 @@ export default function Matriz() {
 
     {/* CARD 5 — ESTRATEGIA DE RESPALDO */}
     <div className="cod-card">
-      <h3>5. ESTRATEGIA DE RESPALDO Y CONTINUIDAD OPERATIVA</h3>
+      <h3>5. ESTRATEGIA DE RESPALDO, SEGMENTACIÓN Y CONTINUIDAD OPERATIVA</h3>
       <p>
         <strong>Política de Backups:</strong> Respaldos automáticos diarios completos de la base
         de datos de pacientes y recetas, cifrados con <strong>AES-256</strong>, almacenados en un
@@ -777,6 +961,15 @@ export default function Matriz() {
         (Standby/Failover) para el portal. Ante caída del servidor primario, el tráfico se
         redirige automáticamente al nodo secundario en un plazo máximo de <strong>5 minutos</strong>{' '}
         mediante balanceo de carga.
+      </p>
+      <br />
+      <p>
+        <strong>Segmentación de Red (DMZ + Isolación):</strong> Desplegar la aplicación web en una 
+        <strong> Demilitarized Zone (DMZ)</strong> separada del servidor de base de datos. Usar 
+        <strong> VLANs</strong> y <strong>firewalls internos</strong> para aislar la BD de producción 
+        en una subred protegida. Implementar políticas de enrutamiento de paquetes que bloqueen 
+        conexiones no autorizadas entre segmentos. En ambiente containerizado: usar Docker network 
+        policies y NetworkPolicy en Kubernetes para restringir tráfico entre servicios.
       </p>
       <br />
       <p>
@@ -823,7 +1016,7 @@ export default function Matriz() {
 
     {/* CARD 7 — LEY 19.628 */}
     <div className="cod-card">
-      <h3>7. OBLIGACIONES LEGALES — LEY N° 19.628 (CHILE)</h3>
+      <h3>7. OBLIGACIONES LEGALES — LEY N° 19.628 (CHILE) Y ESTÁNDARES FARMACÉUTICOS</h3>
       <p>
         FarmaSalud opera en el sector salud procesando <strong>datos personales sensibles</strong>{' '}
         (recetas médicas, patologías implícitas, datos financieros de pacientes). Ante una
@@ -831,22 +1024,24 @@ export default function Matriz() {
       </p>
       <br />
       <p>
-        <strong>Notificación a afectados:</strong> Informar a los titulares de datos
-        comprometidos dentro de <strong>72 horas</strong> desde la confirmación del incidente,
-        indicando qué datos fueron expuestos y qué medidas se adoptaron.
+        <strong>Ley 19.628 de Protección de la Vida Privada:</strong> Notificar a los titulares 
+        de datos comprometidos dentro de <strong>72 horas</strong> desde la confirmación del incidente, 
+        indicando qué datos fueron expuestos y qué medidas se adoptaron. Registrar el incidente 
+        (fecha, hora, categoría de datos, volumen, medidas). La ausencia de controles básicos 
+        constituye incumplimiento del deber de seguridad, exponiendo a FarmaSalud a sanciones 
+        administrativas y acciones civiles.
       </p>
       <br />
       <p>
-        <strong>Registro del incidente:</strong> Documentar fecha y hora del incidente,
-        categoría y volumen de datos comprometidos, medidas de contención adoptadas e identidad
-        del responsable del tratamiento.
+        <strong>Estándares de la Industria Farmacéutica:</strong>
       </p>
-      <br />
-      <p>
-        <strong>Responsabilidad por omisión de controles:</strong> La ausencia de controles
-        básicos como Prepared Statements y sanitización de inputs puede constituir incumplimiento
-        del deber de seguridad exigido por la ley, exponiendo a FarmaSalud a sanciones
-        administrativas y acciones civiles por parte de los pacientes afectados.
+      <ul style={{ margin: '0 0 1rem 1.5rem' }}>
+        <li><strong>PCI-DSS (Payment Card Industry Data Security Standard):</strong> Obligatorio para cualquier empresa que procese tarjetas de crédito. Requiere segmentación de red, cifrado de datos en tránsito y en reposo, auditoría de logs, y control de acceso.</li>
+        <li><strong>HIPAA (Health Insurance Portability and Accountability Act):</strong> Aunque es norma estadounidense, es considerada best-practice global en el sector salud. Requiere: cifrado de PHI (Protected Health Information), access controls, auditoría de acceso a registros médicos, y notificación de brechas dentro de 60 días.</li>
+        <li><strong>LGPD (Ley General de Protección de Datos — Brasil/Mercosur):</strong> Norma similar a GDPR que se expande en Latinoamérica. Exige consentimiento explícito, derechos del titular (acceso, portabilidad, eliminación), y designación de Data Protection Officer.</li>
+      </ul>
+      <p style={{ marginTop: '1rem', color: '#666', fontStyle: 'italic' }}>
+        <strong>Recomendación:</strong> FarmaSalud debe alinearse con PCI-DSS como mínimo (obligatorio para pagos) y adoptar prácticas HIPAA (datos de salud) para cumplir normativas locales e internacionales.
       </p>
     </div>
   </div>
